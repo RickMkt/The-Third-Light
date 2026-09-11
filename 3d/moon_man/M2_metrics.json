@@ -1,0 +1,26 @@
+{
+  "stage": "M2_BODY_REFINEMENT",
+  "m1_approved": true,
+  "total_height_studs": 11.5,
+  "head_reduction_percent": 6.0,
+  "head_diameter_studs": 2.2,
+  "neck_visible_height_studs": 0.34,
+  "approx_triangle_count": 9348,
+  "mesh_objects": 42,
+  "finger_meshes": 20,
+  "rig": false,
+  "bones": 0,
+  "detailed_face": false,
+  "final_uv": false,
+  "final_textures": false,
+  "renders": [
+    "M2_01_front.png",
+    "M2_02_side.png",
+    "M2_03_back.png",
+    "M2_04_three_quarter.png",
+    "M2_05_silhouette.png",
+    "M2_06_hands_close.png",
+    "M2_07_r6_comparison.png",
+    "M2_08_dark_test.png"
+  ]
+}

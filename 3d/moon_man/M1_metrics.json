@@ -1,0 +1,30 @@
+{
+  "stage": "M1_BLOCKOUT",
+  "total_height_studs": 11.515,
+  "target_height_studs": 11.6,
+  "r6_reference_height_studs": 5.45,
+  "height_ratio_vs_r6": 2.113,
+  "head_diameter_studs": 2.34,
+  "head_to_height_ratio_percent": 20.3,
+  "shoulder_joint_width_studs": 1.52,
+  "visible_shoulder_width_studs": 2.0,
+  "arm_length_shoulder_to_fingertip_studs": 5.915,
+  "approx_triangle_count": 4684,
+  "mesh_objects": 17,
+  "rig": false,
+  "bones": 0,
+  "final_uv": false,
+  "final_textures": false,
+  "renders": [
+    "01_front.png",
+    "02_side.png",
+    "03_back.png",
+    "04_three_quarter.png",
+    "05_r6_comparison.png",
+    "06_black_silhouette.png",
+    "07_between_trees_dark.png",
+    "08_behind_rock.png",
+    "09_corridor_dark.png",
+    "10_flashlight_test.png"
+  ]
+}

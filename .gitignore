@@ -1,3 +1,6 @@
 .remember/
 *.rbxl.lock
 *.rbxlx.lock
+*.blend1
+__pycache__/
+*.pyc
