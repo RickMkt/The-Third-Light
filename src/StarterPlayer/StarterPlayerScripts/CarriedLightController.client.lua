@@ -1,7 +1,8 @@
 --!strict
--- For the local player, a lit flashlight's beam is driven from the camera
--- (with a touch of lag) instead of the swinging hand. The tool's own lights
--- stay on for everyone else and are hidden locally while we take over.
+-- For the local player the flashlight is invisible in first person and its
+-- beam is driven from the camera: the position follows the eye instantly, the
+-- direction lags behind like a hand that takes a moment to catch up, with a
+-- soft three-cone edge. The tool's own lights stay on for everyone else.
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -12,7 +13,6 @@ local Flashlight = SoundConfig.Lights.Flashlight
 
 local player = Players.LocalPlayer
 
--- Local-only carrier part living under the camera.
 local carrier = Instance.new("Part")
 carrier.Name = "FlashlightCarrier"
 carrier.Size = Vector3.new(0.2, 0.2, 0.2)
@@ -36,20 +36,25 @@ local function makeSpot(name: string, range: number, angle: number, brightness: 
 	light.Parent = carrier
 	return light
 end
-local spot = makeSpot("Spot", Flashlight.SpotRange, Flashlight.SpotAngle, Flashlight.SpotBrightness, true)
-local spill = makeSpot("Spill", Flashlight.SpillRange, Flashlight.SpillAngle, Flashlight.SpillBrightness, false)
+local cones = {
+	makeSpot("Spot", Flashlight.SpotRange, Flashlight.SpotAngle, Flashlight.SpotBrightness, true),
+	makeSpot("Mid", Flashlight.MidRange, Flashlight.MidAngle, Flashlight.MidBrightness, false),
+	makeSpot("Spill", Flashlight.SpillRange, Flashlight.SpillAngle, Flashlight.SpillBrightness, false),
+}
 
 local activeTool: Tool? = nil
 local toolConnections: { RBXScriptConnection } = {}
 local characterConnections: { RBXScriptConnection } = {}
-local beamCFrame: CFrame? = nil
+local beamRotation: CFrame? = nil
+local swayTime = 0
 
 local function setLocalBeam(enabled: boolean)
-	spot.Enabled = enabled
-	spill.Enabled = enabled
+	for _, cone in ipairs(cones) do
+		cone.Enabled = enabled
+	end
 end
 
--- Hide the tool's replicated lights for us while our camera beam is on.
+-- The tool's replicated lights are for other players; hide them for us while lit.
 local function syncToolLights(tool: Tool, hidden: boolean)
 	for _, descendant in ipairs(tool:GetDescendants()) do
 		if descendant:IsA("Light") then
@@ -76,7 +81,7 @@ local function release()
 		syncToolLights(activeTool, false)
 	end
 	activeTool = nil
-	beamCFrame = nil
+	beamRotation = nil
 	setLocalBeam(false)
 end
 
@@ -84,7 +89,6 @@ local function adopt(tool: Tool)
 	release()
 	activeTool = tool
 	table.insert(toolConnections, tool:GetAttributeChangedSignal("Lit"):Connect(refresh))
-	-- The server re-replicates Enabled on every toggle; keep ours in charge.
 	for _, descendant in ipairs(tool:GetDescendants()) do
 		if descendant:IsA("Light") then
 			table.insert(toolConnections, descendant:GetPropertyChangedSignal("Enabled"):Connect(function()
@@ -127,30 +131,23 @@ local function onCharacterAdded(character: Model)
 	onToolChanged(character)
 end
 
--- In first person Roblox fades the whole character each frame; keep the held
--- tool and the arm holding it visible so the player sees what they carry.
-local function keepToolVisible()
+-- In first person the held tool stays hidden (the camera fades the body; we
+-- make sure the tool goes with it).
+local function hideHeldTool()
 	local character = player.Character
-	if not character then
-		return
-	end
-	local tool = character:FindFirstChildOfClass("Tool")
+	local tool = character and character:FindFirstChildOfClass("Tool")
 	if not tool then
 		return
 	end
 	for _, descendant in ipairs(tool:GetDescendants()) do
-		if descendant:IsA("BasePart") and descendant.Transparency < 1 then
-			descendant.LocalTransparencyModifier = 0
+		if descendant:IsA("BasePart") then
+			descendant.LocalTransparencyModifier = 1
 		end
-	end
-	local arm = character:FindFirstChild("Right Arm") or character:FindFirstChild("RightHand")
-	if arm and arm:IsA("BasePart") then
-		arm.LocalTransparencyModifier = 0
 	end
 end
 
 RunService:BindToRenderStep("FlashlightBeam", Enum.RenderPriority.Camera.Value + 3, function(dt)
-	keepToolVisible()
+	hideHeldTool()
 	local camera = workspace.CurrentCamera
 	if not camera then
 		return
@@ -158,19 +155,30 @@ RunService:BindToRenderStep("FlashlightBeam", Enum.RenderPriority.Camera.Value +
 	if carrier.Parent ~= camera then
 		carrier.Parent = camera
 	end
-	if not spot.Enabled then
-		beamCFrame = nil
+	if not cones[1].Enabled then
+		beamRotation = nil
 		return
 	end
-	-- Beam origin sits a little low and to the right of the eye, aimed with the view.
-	local target = camera.CFrame * CFrame.new(Flashlight.HandOffset)
-	if beamCFrame then
-		local alpha = 1 - math.exp(-Flashlight.FollowLag * dt)
-		beamCFrame = beamCFrame:Lerp(target, alpha)
+
+	-- Position follows the eye; direction eases toward the view.
+	local viewRotation = camera.CFrame.Rotation
+	if beamRotation then
+		local alpha = 1 - math.exp(-Flashlight.RotationLag * dt)
+		beamRotation = beamRotation:Lerp(viewRotation, alpha)
 	else
-		beamCFrame = target
+		beamRotation = viewRotation
 	end
-	carrier.CFrame = beamCFrame :: CFrame
+
+	-- Slow hand drift while moving (a lantern held by a person, not a turret).
+	local character = player.Character
+	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+	local moving = humanoid ~= nil and humanoid.MoveDirection.Magnitude > 0
+	swayTime += dt * (if moving then 1 else 0.35)
+	local sway = math.rad(Flashlight.SwayAmount) * (if moving then 1 else 0.4)
+	local drift = CFrame.Angles(math.sin(swayTime * 1.7) * sway, math.sin(swayTime * 1.3 + 0.8) * sway, 0)
+
+	local origin = (camera.CFrame * CFrame.new(Flashlight.HandOffset)).Position
+	carrier.CFrame = CFrame.new(origin) * (beamRotation :: CFrame) * drift
 end)
 
 player.CharacterAdded:Connect(onCharacterAdded)

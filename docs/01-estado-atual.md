@@ -4,8 +4,8 @@
 
 ## Onde estamos
 
-Fase concluída: **fundação do jogador + acampamento inicial (área 1 da Temporada 1)**.
-Próxima fase: **Setor 1 do labirinto** (desenhar antes de construir; portão de aprovação do Rick).
+Fase concluída: **fundação do jogador + acampamento + corpo do labirinto (3 setores, sem gameplay)**.
+Próxima fase: **aprovação do estilo do labirinto → esconderijos, watch points, chave/código randomizados, portão** (ver `sistemas/labirinto.md`).
 
 Place: publicado no grupo Necrovale como "A Terceira Luz" (`PlaceId 86901786058243`).
 Rig: R6 forçado por `StarterPlayer/StarterCharacter` (corpo neutro, sem avatar do jogador).
@@ -41,14 +41,18 @@ Rig: R6 forçado por `StarterPlayer/StarterCharacter` (corpo neutro, sem avatar 
 - Backups: `ServerStorage/_Backup_2026-09-11_preGraybox` (com TerrainRegion), `ServerStorage/_Archive_2026-09-11_grayboxV1_POIs`, `backups/*.rbxl`, Git.
 - Organização do Workspace: ver `03-arquitetura.md`.
 
+### Labirinto (corpo)
+- 11×12 células de 40 studs (440×480), 3 setores com 2 passagens entre cada, 5 clareiras, paredes de rocha 26+ studs com saliências/musgo, pinheiros nas cristas, mudas/samambaias/troncos/pedras/névoa nos corredores, cinturão de mata fechada sem paredes invisíveis. Layout em `Map/Maze/Layout` (atributos). Marcadores de setor e 6+6 candidatos a chave/código. Escurecimento local + parede ao entrar. 60 fps. Detalhes: `sistemas/labirinto.md`.
+
 ## O que NÃO existe ainda
 
-Labirinto, setores 1–3, portão, chave/código, trilha final, casa, Homem Lua (modelo, rig, animações, IA), Homem Estrela (teaser), esconderijos funcionais, captura/jumpscare, carry item, narração gravada, HUD de objetivo, teste com 2+ clientes.
+Gameplay do labirinto (esconderijos, watch points, randomização de chave/código), portão, trilha final, casa, Homem Lua (modelo, rig, animações, IA), Homem Estrela (teaser), esconderijos funcionais, captura/jumpscare, carry item, narração gravada, HUD de objetivo, teste com 2+ clientes.
 
 ## Pendências / dívidas
 
 - `Lighting.Technology` deve estar em **Future** (ação do Rick, no painel Properties do Lighting) — melhora muito sombras de spot/point lights.
 - Passos são uploads da comunidade → trocar por gravações licenciadas antes de publicar.
+- `PathfindingService` não cobre toda a extensão do labirinto (navmesh) — o Homem Lua deve usar o grafo do `Layout`.
 - Sem stamina server-side (cliente modificado corre infinito) — aceitável por ora.
 - Narração: `DialogueConfig.VoiceId` vazio; gravar falas (ElevenLabs/voz real) e subir no Creator Hub.
 - Grass 3D do Terrain não disponível nesta versão do Studio; sub-bosque virá de assets.

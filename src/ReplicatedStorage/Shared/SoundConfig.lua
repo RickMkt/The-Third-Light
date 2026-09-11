@@ -49,15 +49,20 @@ local SoundConfig = {
 		-- holder the beam follows the camera (with a little lag) so it does not
 		-- swing with the arm animation.
 		Flashlight = {
-			SpotRange = 62,
-			SpotAngle = 24,
-			SpotBrightness = 2.6,
-			SpillRange = 28,
-			SpillAngle = 72,
-			SpillBrightness = 0.45,
-			Color = Color3.fromRGB(228, 236, 255),
-			FollowLag = 14, -- higher = beam sticks closer to the view
+			-- three nested cones so the edge of the beam fades instead of cutting
+			SpotRange = 64,
+			SpotAngle = 18,
+			SpotBrightness = 2.2,
+			MidRange = 44,
+			MidAngle = 36,
+			MidBrightness = 0.9,
+			SpillRange = 26,
+			SpillAngle = 74,
+			SpillBrightness = 0.35,
+			Color = Color3.fromRGB(226, 234, 255),
+			RotationLag = 7, -- how fast the beam catches up with the view (lower = lazier hand)
 			HandOffset = Vector3.new(0.35, -0.3, 0), -- where the beam originates relative to the eye
+			SwayAmount = 0.35, -- degrees of extra drift from the hand while moving
 		},
 	},
 }

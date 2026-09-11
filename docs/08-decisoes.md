@@ -16,3 +16,6 @@ Formato: data · decisão · motivo · consequência.
 - **11/09 · Entrada do labirinto fecha atrás do jogador (parede local + névoa)** — reforça o "não dá para voltar"; por jogador para não prender quem ficou no acampamento.
 - **11/09 · Placeholders em parts são aceitáveis só quando não existe asset bonito** — o Rick pediu preferência a assets do Creator Store; buscas feitas para mesa, rádio, cerca, placa, mochila, poste, toco; mantidos em parts: cerca rústica, placa, postes de madeira, varal.
 - **11/09 · Lighting.Technology = Future é decisão do Rick** (não acessível por script) — recomendado.
+- **11/09 · Labirinto gerado por grade + DFS por setor, escavado em Terrain Rock** — permite um corpo grande (440×480) com controle de progressão (2 passagens entre setores) e paredes orgânicas; o `Layout` fica em atributos para o Homem Lua navegar pelo grafo (o navmesh do PathfindingService não cobre tudo).
+- **11/09 · Escuridão do labirinto é local (cliente)** — ao entrar, a Lighting do jogador é escurecida em 6 s; o acampamento continua iluminado para quem ficou. Lanterna invisível na mão em 1ª pessoa, feixe com inércia e 3 cones.
+- **11/09 · Sem paredes invisíveis no labirinto** — contenção por rocha e cinturão de mata; paredes invisíveis só no acampamento (sul e lados).

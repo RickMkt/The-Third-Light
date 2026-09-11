@@ -16,6 +16,7 @@ Todos inspecionados antes do uso (scripts/remotes removidos, parts ancoradas). O
 | Rádio antigo `Assets/Props/OldRadio` | 8690799691 | xavier2007 (mesh de Sketchfab) | 1 MeshPart texturizado — **conferir licença** antes de publicar |
 | Mesa de piquenique `Assets/Props/PicnicTable` | 10503469726 | 7valkio | 4 Unions + 4 Seats (convertidos em parts); cor escurecida (112,92,66) |
 | Toco realista `Assets/Props/TreeStump` | 9217497551 | omarllollo | MeshPart + SurfaceAppearance; veio com ~38 studs, escalar para 2,6–3,2 |
+| Samambaia `Assets/Props/Fern` | 7979002756 | TheLegoGuy137 | 1 MeshPart + SurfaceAppearance; veio com 23 studs, usar escala 0,14–0,24; sem colisão |
 
 Rejeitados após inspeção: barraca "Camping Community" (brinquedo), pack Fallout 4 (ripado), fogueiras B/C, mochilas (baixa qualidade), cercas de jardim/PBR picket, placa "Forest Sign" (cartoon), postes de rua modernos.
 
