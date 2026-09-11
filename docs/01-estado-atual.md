@@ -5,7 +5,8 @@
 ## Onde estamos
 
 Fase concluída: **fundação do jogador + acampamento + corpo do labirinto (3 setores, sem gameplay)**.
-Próxima fase: **aprovação do estilo do labirinto → esconderijos, watch points, chave/código randomizados, portão** (ver `sistemas/labirinto.md`).
+Fase em andamento: **passada de qualidade no labirinto** (larguras 18–24, vegetação autoral, escuridão legível, lanterna mais forte, camadas de áudio, 4 falas de entrada com legenda) — ver `09-backlog.md`.
+Depois: **esconderijos, watch points, chave/código randomizados, portão** (ver `sistemas/labirinto.md`).
 
 Place: publicado no grupo Necrovale como "A Terceira Luz" (`PlaceId 86901786058243`).
 Rig: R6 forçado por `StarterPlayer/StarterCharacter` (corpo neutro, sem avatar do jogador).
@@ -21,7 +22,7 @@ Rig: R6 forçado por `StarterPlayer/StarterCharacter` (corpo neutro, sem avatar 
 
 ### Inventário (3 slots)
 - Itens são `Tool`s. Pickups no mundo = `Model` com prompt custom (E segura → badge preenche). 1/2/3 equipa, G larga. Limite no servidor. Hotbar da Roblox desligada.
-- `Lanterna` (mesh PBR tingida, feixe foco+derrame, feixe segue a câmera para quem segura, visível na mão em 1ª pessoa).
+- `Lanterna` (mesh PBR tingida, feixe em 3 cones com inércia preso à câmera, **invisível na mão em 1ª pessoa**; os outros a veem na mão).
 - `Lampião` (parts, luz quente curta com tremulação) — existe como Tool mas **não está no mapa**; usado como prop aceso.
 - Itens placeholder antigos: Chave Inglesa, Bateria, Fusível (não usados no mapa atual).
 

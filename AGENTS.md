@@ -1,7 +1,7 @@
 # AGENTS.md — instruções para agentes (Codex, Claude Code, etc.)
 
 Você está ajudando a construir **THE THIRD LIGHT**, um jogo de terror psicológico para Roblox.
-O dono do projeto é o Rick. Responda em **português**. Leia `docs/01-estado-atual.md` antes de qualquer coisa.
+O dono do projeto é o Rick. Responda em **português**. Leia `docs/01-estado-atual.md` antes de qualquer coisa; depois `docs/02-regras-de-desenvolvimento.md` (regras completas) e `docs/04-mecanicas-e-gameplay.md` (como o jogo deve ser).
 
 ## O que este projeto é (e não é)
 
