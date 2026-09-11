@@ -1,0 +1,62 @@
+--!strict
+-- Trigger zones (Gameplay.Interactions.Triggers): invisible parts with a
+-- "LineId" attribute. When a player's character enters one, the matching
+-- dialogue line is sent to that player. Lines marked Once fire one time per
+-- player per round.
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Shared = ReplicatedStorage:WaitForChild("Shared")
+local DialogueConfig = require(Shared:WaitForChild("DialogueConfig"))
+local ShowLine = Shared:WaitForChild("DialogueRemotes"):WaitForChild("ShowLine") :: RemoteEvent
+local Triggers = workspace:WaitForChild("TheThirdLight"):WaitForChild("Gameplay"):WaitForChild("Interactions"):WaitForChild("Triggers")
+
+local fired: { [Player]: { [string]: boolean } } = {}
+local lastFire: { [Player]: { [string]: number } } = {}
+
+local function onTouched(zone: BasePart, hit: BasePart)
+	local lineId = zone:GetAttribute("LineId")
+	if typeof(lineId) ~= "string" then
+		return
+	end
+	local line = DialogueConfig[lineId]
+	if not line then
+		return
+	end
+	local character = hit:FindFirstAncestorOfClass("Model")
+	local player = character and Players:GetPlayerFromCharacter(character)
+	if not player then
+		return
+	end
+	fired[player] = fired[player] or {}
+	lastFire[player] = lastFire[player] or {}
+	if line.Once and fired[player][lineId] then
+		return
+	end
+	local now = os.clock()
+	if now - (lastFire[player][lineId] or -math.huge) < 8 then
+		return
+	end
+	fired[player][lineId] = true
+	lastFire[player][lineId] = now
+	ShowLine:FireClient(player, lineId)
+end
+
+local function hook(zone: Instance)
+	if zone:IsA("BasePart") then
+		zone.Touched:Connect(function(hit)
+			onTouched(zone, hit)
+		end)
+	end
+end
+
+for _, zone in ipairs(Triggers:GetChildren()) do
+	hook(zone)
+end
+Triggers.ChildAdded:Connect(hook)
+
+Players.PlayerRemoving:Connect(function(player)
+	fired[player] = nil
+	lastFire[player] = nil
+end)
