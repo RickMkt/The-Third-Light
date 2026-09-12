@@ -67,7 +67,7 @@ Feedback corporal (tudo sincronizado ao batimento e escalado por `1 − stamina`
 ### 3.1 Lanterna (item central da Temporada 1)
 - Aparece pequena e deitada na mesa de piquenique. As anotações de campo dizem para pegá-la.
 - Em primeira pessoa **não aparece na mão** (`LocalTransparencyModifier = 1`); outros jogadores a veem na mão do colega, acesa ou apagada (replicado por `ToggleLight`).
-- Feixe preso à **câmera**, não ao braço: rotação com inércia exponencial (`RotationLag 10`), deriva base `0,26°` (`0,25×` parado; `1,55×` correndo), sem blur ao girar. Três cones: foco (68 studs, 18°, 2,8), meio (48, 36°, 1,15), derrame (30, 74°, 0,42). Só o foco projeta sombra.
+- Feixe preso à **câmera**, não ao braço: rotação com inércia exponencial (`RotationLag 10`), deriva base `0,26°` (`0,25×` parado; `1,55×` correndo), sem blur ao girar. Três cones: foco (68 studs, 18°, 2,8), meio (48, 36°, 1,15), derrame (30, 74°, 0,42). Só o foco projeta sombra. Um `PointLight` sem sombras, 8 studs à frente e 0,6 abaixo (`Range 30`, `Brightness 3`), preenche o chão e a base das paredes próximos sem aumentar a visão distante.
 - `[DECIDIDO]` Bateria: consumo lento + luz enfraquecendo (nunca apaga de vez sem aviso). Ainda não implementado.
 - Ligar/desligar tem som seco de interruptor e é ouvido pelos outros a curta distância — a luz **denuncia** o jogador tanto quanto ajuda.
 
@@ -107,6 +107,7 @@ Clareira ~84×74 studs. Spawn ao sul, virado para a fogueira → barracas → en
 - Paredes são **formações de rocha em Terrain** (não muros): 26+ studs, assimétricas, saliências, musgo, pinheiros nas cristas. Sensação alvo: **floresta presa entre rochas**, não canyon nem corredor de jogo.
 - Grade 11×12 células de 40 studs; layout gerado (DFS por setor + laços) e guardado em atributos de `Map/Maze/Layout` para o Homem Lua navegar pelo grafo.
 - **Larguras medidas após a passada**: todas média 20,4/min 14,0; principais média 22,9/min 19,4; secundárias média 19,1/min 14,0. Bifurcações chegam a 28,7. Núcleo caminhável testado com jogador R6 e cápsula temporária equivalente a 3,5–4 m; nada decorativo atravessa rotas.
+- O núcleo dos 151 corredores e 132 nós é plano a Y≈2; a faixa elevada central foi removida. Duas clareiras existentes reservam áreas livres para landmarks futuros: observatório em ruínas no S2 (64×44) e cabana abandonada no S3 (54×38). São apenas marcadores invisíveis por enquanto.
 - **Nunca ver o fim de um corredor**: curvas, névoa, vegetação.
 - **Sem paredes invisíveis dentro do labirinto.** Contenção é rocha e cinturão de mata.
 - Colisão: terreno é a colisão principal; árvores só no tronco; samambaias, grama, pedras pequenas, troncos decorativos `CanCollide = false`.
@@ -159,7 +160,7 @@ Resumo de `06-homem-lua.md`, do ponto de vista de gameplay:
 
 - Noite: `ClockTime 22.6`, lua, Atmosphere como névoa. Acampamento: quente (fogueira, lampiões) contra ambiente frio/azul.
 - Labirinto: **escurecimento local por jogador** ao entrar (tween de 6 s): `Brightness 0,72`, `Exposure −0,58`, `Ambient (10,12,19)`, `OutdoorAmbient (22,27,39)`, Atmosphere `Density 0,74`, `Haze 10,5`, `Offset 0,48`, `Color (65,72,92)`, `Decay (12,16,26)`. Resultado alvo: muito escuro mas legível.
-- Lanterna: foco `68 studs / 18° / 2,8`, médio `48 / 36° / 1,15`, spill `30 / 74° / 0,42`; apenas o foco projeta sombra. Inércia exponencial `RotationLag 10`, sway base `0,26°`, multiplicadores `0,25` parado e `1,55` correndo.
+- Lanterna: foco `68 studs / 18° / 2,8`, médio `48 / 36° / 1,15`, spill `30 / 74° / 0,42`; apenas o foco projeta sombra. Preenchimento próximo `PointLight 30 / 3`, deslocado 8 studs à frente e 0,6 abaixo, sem sombras. Inércia exponencial `RotationLag 10`, sway base `0,26°`, multiplicadores `0,25` parado e `1,55` correndo.
 - Luzes com sombra: poucas (foco da lanterna, fogueira). `Lighting.Technology = Future` recomendado (só o Rick muda).
 - Sem luzes gratuitas no labirinto: apenas manchas frias de luar onde a copa abre, e futuros pontos de composição (ruínas, posto de vigia).
 

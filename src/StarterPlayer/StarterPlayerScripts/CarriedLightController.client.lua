@@ -24,6 +24,18 @@ carrier.CanQuery = false
 carrier.CanTouch = false
 carrier.CastShadow = false
 
+local fillCarrier = carrier:Clone()
+fillCarrier.Name = "FlashlightForwardFillCarrier"
+
+local forwardFill = Instance.new("PointLight")
+forwardFill.Name = "ForwardFill"
+forwardFill.Range = Flashlight.ForwardFillRange
+forwardFill.Brightness = Flashlight.ForwardFillBrightness
+forwardFill.Color = Flashlight.Color
+forwardFill.Shadows = false
+forwardFill.Enabled = false
+forwardFill.Parent = fillCarrier
+
 local function makeSpot(name: string, range: number, angle: number, brightness: number, shadows: boolean): SpotLight
 	local light = Instance.new("SpotLight")
 	light.Name = name
@@ -53,6 +65,7 @@ local function setLocalBeam(enabled: boolean)
 	for _, cone in ipairs(cones) do
 		cone.Enabled = enabled
 	end
+	forwardFill.Enabled = enabled
 end
 
 -- The tool's replicated lights are for other players; hide them for us while lit.
@@ -156,6 +169,9 @@ RunService:BindToRenderStep("FlashlightBeam", Enum.RenderPriority.Camera.Value +
 	if carrier.Parent ~= camera then
 		carrier.Parent = camera
 	end
+	if fillCarrier.Parent ~= camera then
+		fillCarrier.Parent = camera
+	end
 	if not cones[1].Enabled then
 		beamRotation = nil
 		return
@@ -181,7 +197,9 @@ RunService:BindToRenderStep("FlashlightBeam", Enum.RenderPriority.Camera.Value +
 	local drift = CFrame.Angles(math.sin(swayTime * 1.7) * sway, math.sin(swayTime * 1.3 + 0.8) * sway, 0)
 
 	local origin = (camera.CFrame * CFrame.new(Flashlight.HandOffset)).Position
-	carrier.CFrame = CFrame.new(origin) * (beamRotation :: CFrame) * drift
+	local beamCFrame = CFrame.new(origin) * (beamRotation :: CFrame) * drift
+	carrier.CFrame = beamCFrame
+	fillCarrier.CFrame = beamCFrame * CFrame.new(0, -Flashlight.ForwardFillDrop, -Flashlight.ForwardFillDistance)
 end)
 
 player.CharacterAdded:Connect(onCharacterAdded)
