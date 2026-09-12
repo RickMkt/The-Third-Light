@@ -59,13 +59,13 @@ local SoundConfig = {
 			SpillRange = 30,
 			SpillAngle = 74,
 			SpillBrightness = 0.42,
-			-- Small forward fill: the cones miss nearby ground when the player
-			-- looks ahead. This reveals the walking surface without extending the
-			-- flashlight's effective sight distance.
-			ForwardFillRange = 30,
-			ForwardFillBrightness = 3,
-			ForwardFillDistance = 8,
-			ForwardFillDrop = 0.6,
+			-- Wide cone aimed only forward: it reveals the nearby walking surface
+			-- without making the player's body emit light in every direction.
+			ForwardFillRange = 32,
+			ForwardFillAngle = 100,
+			ForwardFillBrightness = 1.8,
+			ForwardFillDistance = 4,
+			ForwardFillDrop = 1,
 			Color = Color3.fromRGB(226, 234, 255),
 			RotationLag = 10, -- small hand-like delay without making aiming feel sluggish
 			HandOffset = Vector3.new(0.35, -0.3, 0), -- where the beam originates relative to the eye

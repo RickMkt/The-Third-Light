@@ -27,9 +27,11 @@ carrier.CastShadow = false
 local fillCarrier = carrier:Clone()
 fillCarrier.Name = "FlashlightForwardFillCarrier"
 
-local forwardFill = Instance.new("PointLight")
+local forwardFill = Instance.new("SpotLight")
 forwardFill.Name = "ForwardFill"
+forwardFill.Face = Enum.NormalId.Front
 forwardFill.Range = Flashlight.ForwardFillRange
+forwardFill.Angle = Flashlight.ForwardFillAngle
 forwardFill.Brightness = Flashlight.ForwardFillBrightness
 forwardFill.Color = Flashlight.Color
 forwardFill.Shadows = false

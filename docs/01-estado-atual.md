@@ -23,7 +23,7 @@ Rig: R6 forçado por `StarterPlayer/StarterCharacter` (corpo neutro, sem avatar 
 
 ### Inventário (3 slots)
 - Itens são `Tool`s. Pickups no mundo = `Model` com prompt custom (E segura → badge preenche). 1/2/3 equipa, G larga. Limite no servidor. Hotbar da Roblox desligada.
-- `Lanterna` (mesh PBR tingida, feixe em 3 cones com inércia preso à câmera + preenchimento curto para chão/paredes próximos, **invisível na mão em 1ª pessoa**; os outros a veem na mão).
+- `Lanterna` (mesh PBR tingida, feixe em 3 cones com inércia preso à câmera + cone frontal largo para chão/paredes próximos, **invisível na mão em 1ª pessoa**; os outros a veem na mão). Não há luz 360° no jogador.
 - `Lampião` (parts, luz quente curta com tremulação) — existe como Tool mas **não está no mapa**; usado como prop aceso.
 - Itens placeholder antigos: Chave Inglesa, Bateria, Fusível (não usados no mapa atual).
 
@@ -41,12 +41,12 @@ Rig: R6 forçado por `StarterPlayer/StarterCharacter` (corpo neutro, sem avatar 
 - Ao cruzar a entrada: uma de 4 falas curtas em inglês, determinada por `UserId % 4`, blur na tela, cortina de névoa e **parede local** — não dá para voltar ao acampamento. Vozes continuam sem asset; apenas legenda.
 
 ### Infra
-- Backups: `ServerStorage/_Backup_2026-09-11_preGraybox`, `_Backup_2026-09-11_preQualityPass`, `_Backup_2026-09-11_preMazeRefine2`, `_Archive_2026-09-11_grayboxV1_POIs`, `_Archive_2026-09-11_qualityPartialClaude`, `backups/*.rbxl` e Git.
+- Backups: `ServerStorage/_Backup_2026-09-11_preGraybox`, `_Backup_2026-09-11_preQualityPass`, `_Backup_2026-09-11_preMazeRefine2`, `_Backup_2026-09-11_preMazeRefine3`, `_Archive_2026-09-11_grayboxV1_POIs`, `_Archive_2026-09-11_qualityPartialClaude`, `backups/*.rbxl` e Git.
 - Organização do Workspace: ver `03-arquitetura.md`.
 
 ### Labirinto (corpo + qualidade)
-- 11×12 células de 40 studs (440×480), 3 setores, 151 conexões, 5 clareiras e 2 passagens entre setores. Largura medida: média 20,4; mínima 14,0; principais média 22,9/mínima 19,4.
-- Paredes de rocha e caminhos foram reescavados; S3 ficou mais alto. O calombo central foi removido dos 151 corredores e 132 nós: 604 amostras confirmaram núcleo plano, sem falhas de chão. Vegetação foi recomposta em grupos: 917 árvores, 208 samambaias, 8 props sem colisão, 39 emissores de névoa e 64 manchas irregulares de musgo/grama em Terrain.
+- 11×12 células de 40 studs (440×480), 3 setores, 151 conexões, 5 clareiras e 2 passagens entre setores. Após o terceiro refinamento: largura média 24,9; mínima 20,0; principais média 28,8/mínima 22,3; secundárias média 23,0/mínima 20,0.
+- Paredes de rocha e caminhos foram reescavados; S3 ficou mais alto. O calombo central foi removido dos 151 corredores e 132 nós: 604 amostras confirmaram núcleo plano, sem falhas de chão. Vegetação recomposta e aterrada: 920 árvores, 275 samambaias, 6 props sem colisão, 39 emissores de névoa e 64 manchas irregulares de musgo/grama em Terrain. Os 2 boulders esféricos artificiais foram removidos.
 - Duas clareiras existentes foram ampliadas e reservadas, sem estruturas: observatório em ruínas no S2 (64×44) e cabana abandonada no S3 (54×38), marcadas em `Gameplay/FutureStructureZones`.
 - Layout em `Map/Maze/Layout` (atributos), marcadores de setor e 6+6 candidatos a chave/código preservados. Escurecimento local legível, lanterna revisada e mixer de áudio por setor. Walkthrough completo, cápsula temporária de 3,5–4 m e 60 fps validados. Detalhes: `sistemas/labirinto.md`.
 
