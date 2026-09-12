@@ -9,3 +9,6 @@
 - Pickups: checar `Gameplay/Items` (pivot, extents, UpVector para orientação). Luzes: `Enabled`, `Brightness` oscilando. Ferramenta em 1ª pessoa: `LocalTransparencyModifier` e posição relativa à câmera.
 - Multiplayer real (2+ clientes) só manualmente: Test → Clients and Servers.
 - Terminar parando o play; lembrar o Rick de `Ctrl+S`.
+
+## Screenshots à noite com luzes locais (lição de 11/09)
+`screen_capture` com `camera_position` **não** move a câmera real do Studio; a grade de iluminação (voxels) é calculada em volta da câmera real. Uma SpotLight/PointLight a 300+ studs da câmera do Studio **não aparece** na captura — parece que "a lanterna não ilumina". Para avaliar luz local: `workspace.CurrentCamera.CFrame = CFrame.lookAt(pos, alvo)` em Edit, `task.wait(1)`, e só então `screen_capture` sem argumentos de câmera. Para simular a lanterna, criar um Part invisível com os mesmos SpotLights na posição da câmera e apagar depois.
