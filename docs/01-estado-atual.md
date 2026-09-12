@@ -7,6 +7,7 @@
 Fase concluída: **fundação do jogador + acampamento + corpo do labirinto + passada de qualidade**.
 Portão atual: **aguardando avaliação do Rick no Studio** (feeling de escuridão, lanterna, vegetação e áudio).
 Depois da aprovação: **estruturas/landmarks, esconderijos, watch points, chave/código randomizados e portão** (ver `sistemas/labirinto.md`).
+Trilha 3D paralela: **Homem Lua M1 aprovado; corpo M2 concluído e aguardando aprovação**. Ainda não há rosto M3, rig, animações nem integração no place; ver `3d/moon_man/M2_REPORT.md`.
 
 Place: publicado no grupo Necrovale como "A Terceira Luz" (`PlaceId 86901786058243`).
 Rig: R6 forçado por `StarterPlayer/StarterCharacter` (corpo neutro, sem avatar do jogador).
@@ -50,7 +51,7 @@ Rig: R6 forçado por `StarterPlayer/StarterCharacter` (corpo neutro, sem avatar 
 
 ## O que NÃO existe ainda
 
-Gameplay do labirinto (esconderijos, watch points, randomização de chave/código), portão, trilha final, casa, Homem Lua (modelo, rig, animações, IA), Homem Estrela (teaser), esconderijos funcionais, captura/jumpscare, carry item, narração gravada, HUD de objetivo, teste com 2+ clientes.
+Gameplay do labirinto (esconderijos, watch points, randomização de chave/código), portão, trilha final, casa, Homem Lua **integrado** (o corpo M2 existe apenas em Blender; faltam rosto, rig, animações e IA), Homem Estrela (teaser), esconderijos funcionais, captura/jumpscare, carry item, narração gravada, HUD de objetivo, teste com 2+ clientes.
 
 ## Pendências / dívidas
 
