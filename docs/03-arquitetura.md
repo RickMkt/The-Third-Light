@@ -95,3 +95,9 @@ Configuração final noturna: `ClockTime 22.6`, lua 16°, sol 0°, `Brightness 1
 - Tag `FlickerLight` em luzes: `BaseBrightness`, `Flicker`, `FlickerSpeed`.
 - Tools: `LightMode` (Flashlight/Lantern), `Lit`, `Slot`, `PickupRotation` (Vector3 graus), `PickupScale`.
 - Parts: `LitPart` (+ `LitColor`/`UnlitColor`) para pavios; `ItemName` em spawns/pickups; `LineId` em gatilhos; `Description`/`LookAt` em MoonWatchPoints (quando existirem).
+
+
+## Atualização MAZE V2-A (12/09)
+- `Map/Maze/Sector1 | Sector2 | Sector3 | FinalGateArea`, cada um com `Forest`, `Undergrowth`, `Props`, `Mist`. `Map/Maze/Layout` (Configuration) continua a verdade do grafo (`OpenWalls`, `LinkWidths`, `MainLinks`, `Clearings`, `StructureAreas`, `DeadEnds1..3`, `Pockets`, `EntryMouth`).
+- `Gameplay/ObjectiveCandidates/Sector2|Sector3` (antes `FutureObjectiveSpawns`), `Gameplay/FutureStructures/{RangerCabin,Observatory,WatchPost,TechnicalArea,AncientFoundation}`, `Gameplay/FutureMoonPoints`, `Gameplay/EasterEggAreas` — todos parts invisíveis com atributos (sem lógica).
+- `ServerStorage/_Tools/MazePhase2` (ModuleScript de construção: paredes, vegetação, copas) — ferramenta de desenvolvimento, não roda em jogo.

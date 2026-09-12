@@ -4,15 +4,17 @@ import sys
 from PIL import Image, ImageDraw, ImageFont
 
 OPENWALLS = open("tools/_layout_openwalls.txt").read().strip()
-CLEARINGS = "2,2;8,1;5,5;1,7;8,10"
+CLEARINGS = "2,2;8,1;6,2;5,5;1,7;8,4;9,6;2,9;4,9;8,10"
 POCKETS = "3,10;7,0;7,2;7,5;7,7;8,3;8,4;8,6;9,0;9,2;9,5;9,7;9,9"
 MAIN = open("tools/_layout_main.txt").read().strip()
 CANDS = open("tools/_layout_cands.txt").read().strip()
+EXTRA = dict(l.split("=", 1) for l in open("tools/_layout_extra.txt", encoding="utf-8").read().strip().splitlines())
+AREA_R = {"2,2": 27, "8,1": 27, "6,2": 16, "5,5": 30, "1,7": 27, "8,4": 17, "9,6": 17, "2,9": 19, "4,9": 18, "8,10": 38}
 
 COLS, ROWS, CELL = 11, 12, 40
 X0, Z0 = -200, -160
 S = 3.0  # px per stud
-W, H = int(560 * S), int(760 * S)
+W, H = int(560 * S), int(860 * S)
 OX, OZ = 280, -80  # world: x=-280..280, z=+80..-680 (north up)
 
 
@@ -21,7 +23,7 @@ def wx(x):
 
 
 def wz(z):
-    return int((z + 680) * S)  # north (z=-680) at the top, camp (z=+80) at the bottom
+    return int((z + 780) * S)  # north (z=-680) at the top, camp (z=+80) at the bottom
 
 
 def rect(x0, y0, x1, y1, **kw):
@@ -40,7 +42,7 @@ except Exception:
 # rock block
 rect(wx(-250), wz(-650), wx(250), wz(-130), fill=(58, 62, 72))
 # sector bands
-for r0, r1, col, name in [(0, 3, (70, 78, 70), "SETOR 1 — observa"), (4, 7, (74, 70, 64), "SETOR 2 — perseguição começa · chave/código"), (8, 11, (66, 60, 70), "SETOR 3 — mais perigoso · chave/código · cabana")]:
+for r0, r1, col, name in [(0, 3, (70, 78, 70), "SETOR 1 — observação · 3 clareiras"), (4, 7, (74, 70, 64), "SETOR 2 — exploração + objetivo · 4 áreas de estrutura"), (8, 11, (66, 60, 70), "SETOR 3 — sobrevivência · chave/código · 1 ruína pequena")]:
     z_top = Z0 - r1 * CELL - 20
     z_bot = Z0 - r0 * CELL + 20
     rect(wx(-250), wz(z_top), wx(250), wz(z_bot), fill=col)
@@ -74,7 +76,7 @@ for c in range(COLS):
         k = f"{c},{r}"
         x, z = center(c, r)
         if k in clear:
-            rad = 27 * S
+            rad = AREA_R.get(k, 27) * S
             d.ellipse([wx(x) - rad, wz(z) - rad, wx(x) + rad, wz(z) + rad], fill=(120, 140, 98))
         elif k in pockets:
             rad = 15 * S
@@ -93,15 +95,34 @@ d.text((wx(-55), wz(-40) + 6), "ACAMPAMENTO (spawn)", fill=(230, 200, 140), font
 d.line([wx(-52), wz(-135), wx(-12), wz(-135)], fill=(230, 80, 80), width=4)
 d.text((wx(-10), wz(-135) + 4), "barreira/gatilho (z -135/-142)", fill=(230, 120, 120), font=small)
 # exit corridor + gate
-d.line([wx(80), wz(-600), wx(80), wz(-676)], fill=(118, 138, 96), width=int(19 * S))
-rect(wx(68), wz(-676), wx(92), wz(-664), outline=(230, 200, 80), width=3)
-d.text((wx(95), wz(-672)), "PORTÃO FINAL (futuro) (80,-670)", fill=(240, 210, 100), font=font)
-# cabin
-rect(wx(121), wz(-574), wx(139), wz(-552), fill=(150, 110, 70), outline=(240, 200, 150), width=2)
-d.text((wx(142), wz(-566)), "CABANA (8,10)", fill=(250, 220, 170), font=font)
-# observatory reserve
-rect(wx(-32), wz(-382), wx(32), wz(-338), outline=(160, 160, 200), width=2)
-d.text((wx(-30), wz(-382) - 16), "reserva observatório", fill=(180, 180, 220), font=small)
+d.line([wx(80), wz(-600), wx(80), wz(-656)], fill=(118, 138, 96), width=int(19 * S))
+d.line([wx(80), wz(-702), wx(80), wz(-760)], fill=(118, 138, 96), width=int(16 * S))
+rect(wx(73), wz(-707), wx(87), wz(-699), fill=(240, 210, 100))
+d.text((wx(90), wz(-712)), "PORTÃO FINAL (futuro) (80,-703) → trilha final", fill=(240, 210, 100), font=font)
+# structure areas + S3 foundation
+for item in EXTRA["STRUCT"].split(";"):
+    name, vals = item.split(":")
+    x, z, sx, sz = map(float, vals.split(","))
+    col = (200, 150, 90) if name != "AncientFoundation" else (150, 120, 130)
+    rect(wx(x - sx / 2), wz(z - sz / 2), wx(x + sx / 2), wz(z + sz / 2), outline=col, width=3)
+    d.text((wx(x - sx / 2) + 4, wz(z - sz / 2) + 4), name, fill=col, font=font)
+# gate antechamber
+rect(wx(62), wz(-702), wx(98), wz(-656), outline=(230, 200, 80), width=2)
+d.text((wx(100), wz(-690)), "antecâmara 36×46", fill=(240, 210, 100), font=small)
+# future moon points
+for item in EXTRA["MOON"].split(";"):
+    name, pos = item.split(":")
+    x, z = map(float, pos.split(","))
+    r = 6 * S
+    d.ellipse([wx(x) - r, wz(z) - r, wx(x) + r, wz(z) + r], outline=(235, 70, 70), width=3)
+    d.text((wx(x) + r + 2, wz(z) - 7), name.split("_", 1)[1], fill=(235, 120, 120), font=small)
+# easter egg areas
+for item in EXTRA["EGGS"].split(";"):
+    name, pos = item.split(":")
+    x, z = map(float, pos.split(","))
+    r = 6 * S
+    d.polygon([(wx(x), wz(z) - r), (wx(x) + r, wz(z)), (wx(x), wz(z) + r), (wx(x) - r, wz(z))], fill=(90, 220, 120))
+    d.text((wx(x) + r + 2, wz(z) - 7), name.split("_", 1)[1], fill=(140, 240, 160), font=small)
 # candidates
 for item in CANDS.split(";"):
     name, pos = item.split(":")
@@ -118,9 +139,9 @@ for c in range(COLS):
 for r in range(ROWS):
     d.text((wx(-270), wz(Z0 - r * CELL) - 7), f"r{r}", fill=(150, 150, 160), font=small)
 # legend
-lx, ly = wx(-275), wz(-680) + 6
-d.text((lx, ly), "THE THIRD LIGHT — labirinto (norte para cima)", fill=(255, 255, 255), font=big)
-d.text((lx, ly + 30), "corredor principal (largo)   corredor secundário   ● clareira/bolsão   ● candidato chave/código   ▬ barreira", fill=(200, 200, 210), font=small)
+lx, ly = wx(-275), wz(-780) + 6
+d.text((lx, ly), "THE THIRD LIGHT — MAZE V2-A (norte para cima)", fill=(255, 255, 255), font=big)
+d.text((lx, ly + 30), "corredor principal   secundário   ● clareira/área   ● candidato chave/código   ○ vermelho = futuro Moon Point   ◆ verde = easter egg   ▬ barreira", fill=(200, 200, 210), font=small)
 d.text((lx, ly + 48), "Setor 1 = linhas 0–3 · Setor 2 = 4–7 · Setor 3 = 8–11 · passagens S1→S2 nas colunas 4 e 6 · S2→S3 nas colunas 1 e 10", fill=(200, 200, 210), font=small)
 
 out = sys.argv[1] if len(sys.argv) > 1 else "docs/img/mapa-labirinto.png"

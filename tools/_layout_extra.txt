@@ -1,0 +1,3 @@
+MOON=S1_Watch_ReadingOutcrop:-18,-173;S1_Watch_Clearing22_FarRim:-140,-262;S1_Watch_Clearing81_Top:140,-182;S1_Watch_Clearing62_Mouth:-40,-258;S2_Stalk_ObservatoryRim:-26,-384;S2_Stalk_CabinWindowView:-186,-466;S2_Stalk_WatchPostBelow:96,-300;S2_Stalk_TechCorridor:160,-440;S3_Close_Clearing29:-100,-520;S3_Close_Clearing49:-60,-536;S3_Close_FoundationMouth:80,-560;S3_Chase_GateApproach:80,-640
+EGGS=S1_LostBackpack:-200,-280;S2_OldCamp:-200,-320;S3_StrangeTree:0,-520
+STRUCT=RangerCabin:-160,-440,40,46;Observatory:0,-360,56,56;WatchPost:120,-320,30,34;TechnicalArea:160,-401,30,40;AncientFoundation:120,-560,30,30

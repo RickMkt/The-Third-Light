@@ -5,7 +5,7 @@
 ## Onde estamos
 
 Fase concluída: **fundação do jogador + acampamento + corpo do labirinto + passada de qualidade**.
-Plano oficial de execução: `11-plano-oficial-execucao.md`. **Fases 1, 2 e graybox da cabana (3) executadas em 12/09 (madrugada) — aguardando avaliação do Rick.** Backup `ServerStorage/_Backup_2026-09-11_prePhase1_entrada`. Detalhes em `sistemas/labirinto.md` (seções Fase 1/2/3). Não avançar para chave/código/portão/Homem Lua sem aprovação.
+Plano oficial de execução: `11-plano-oficial-execucao.md`. **MAZE V2-A (corpo definitivo) executado em 12/09 — aguardando avaliação do Rick.** Cabana do S3 arquivada para V2-B (cabana do guarda no S2). Backups `_Backup_2026-09-11_prePhase1_entrada`, `_Backup_2026-09-12_preMazeV2A` (tag Git `checkpoint-before-maze-v2a`). Detalhes em `sistemas/labirinto.md` (seções Fase 1/2/3). Não avançar para chave/código/portão/Homem Lua sem aprovação.
 Trilha 3D paralela: **Homem Lua M1 aprovado; corpo M2 concluído e aguardando aprovação**. Ainda não há rosto M3, rig, animações nem integração no place; ver `3d/moon_man/M2_REPORT.md`.
 
 Place: publicado no grupo Necrovale como "A Terceira Luz" (`PlaceId 86901786058243`).
