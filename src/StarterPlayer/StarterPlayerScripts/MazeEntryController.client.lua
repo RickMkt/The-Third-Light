@@ -19,12 +19,12 @@ local closed = false
 
 -- Maze darkness (local Lighting overrides). Camp values are restored on respawn.
 local MAZE_LIGHTING = {
-	Brightness = 0.55,
-	ExposureCompensation = -0.95,
-	Ambient = Color3.fromRGB(6, 7, 11),
-	OutdoorAmbient = Color3.fromRGB(14, 17, 27),
+	Brightness = 0.72,
+	ExposureCompensation = -0.58,
+	Ambient = Color3.fromRGB(10, 12, 19),
+	OutdoorAmbient = Color3.fromRGB(22, 27, 39),
 }
-local MAZE_ATMOSPHERE = { Density = 0.78, Haze = 11, Offset = 0.55, Color = Color3.fromRGB(58, 64, 82), Decay = Color3.fromRGB(10, 12, 18) }
+local MAZE_ATMOSPHERE = { Density = 0.74, Haze = 10.5, Offset = 0.48, Color = Color3.fromRGB(65, 72, 92), Decay = Color3.fromRGB(12, 16, 26) }
 local campLighting: { [string]: any } = {}
 local campAtmosphere: { [string]: any } = {}
 
@@ -110,7 +110,7 @@ local function closeEntrance()
 end
 
 ShowLine.OnClientEvent:Connect(function(lineId: string)
-	if lineId == "MazeEntrance" then
+	if string.match(lineId, "^MazeEntrance%d$") then
 		closeEntrance()
 	end
 end)

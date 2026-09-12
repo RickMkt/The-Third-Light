@@ -23,12 +23,12 @@ local SoundConfig = {
 
 	-- Random positional sounds around players (branches, foliage, owls).
 	Forest = {
-		MinInterval = 9,
-		MaxInterval = 26,
+		MinInterval = 12,
+		MaxInterval = 30,
 		MinDistance = 18, -- from the chosen player
 		MaxDistance = 60,
 		-- relative weights
-		Weights = { BranchSnap = 5, Foliage = 4, Owl = 2 },
+		Weights = { BranchSnap = 5, Foliage = 4, Owl = 1 },
 		OwlHeight = 14, -- owls come from up in the trees
 	},
 
@@ -50,19 +50,21 @@ local SoundConfig = {
 		-- swing with the arm animation.
 		Flashlight = {
 			-- three nested cones so the edge of the beam fades instead of cutting
-			SpotRange = 64,
+			SpotRange = 68,
 			SpotAngle = 18,
-			SpotBrightness = 2.2,
-			MidRange = 44,
+			SpotBrightness = 2.8,
+			MidRange = 48,
 			MidAngle = 36,
-			MidBrightness = 0.9,
-			SpillRange = 26,
+			MidBrightness = 1.15,
+			SpillRange = 30,
 			SpillAngle = 74,
-			SpillBrightness = 0.35,
+			SpillBrightness = 0.42,
 			Color = Color3.fromRGB(226, 234, 255),
-			RotationLag = 7, -- how fast the beam catches up with the view (lower = lazier hand)
+			RotationLag = 10, -- small hand-like delay without making aiming feel sluggish
 			HandOffset = Vector3.new(0.35, -0.3, 0), -- where the beam originates relative to the eye
-			SwayAmount = 0.35, -- degrees of extra drift from the hand while moving
+			SwayAmount = 0.26, -- base degrees of hand drift
+			SwayIdleMultiplier = 0.25,
+			SwaySprintMultiplier = 1.55,
 		},
 	},
 }

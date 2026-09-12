@@ -7,12 +7,13 @@ Convenção de nomes: `.server.lua` = `Script`, `.client.lua` = `LocalScript`, `
 O caminho reflete a hierarquia do DataModel.
 
 ```
-ReplicatedStorage/Shared/        MovementConfig · InventoryConfig · SoundConfig · DialogueConfig
+ReplicatedStorage/Shared/        MovementConfig · InventoryConfig · SoundConfig · AmbienceConfig · DialogueConfig
 ServerScriptService/             MovementServer · InventoryServer · SoundServer · TriggerServer
 StarterPlayer/StarterPlayerScripts/
                                  MovementController · CameraEffects · MovementAudio · InventoryController
                                  FootstepController · LightFlicker · InteractionPrompts
                                  CarriedLightController · DialogueController · MazeEntryController
+                                 MazeAmbienceController
 ServerStorage/Items/             ToggleOnActivate (LocalScript dentro das Tools Lanterna e Lampião)
 ```
 

@@ -1,21 +1,22 @@
 # Labirinto — corpo (Setores 1–3)
 
-Construído em 11/09/2026. Só o corpo: sem chave/código, sem portão, sem Homem Lua, sem esconderijos funcionais.
+Construído e submetido à passada de qualidade em 11/09/2026. Só o corpo: sem chave/código, sem portão, sem Homem Lua, sem landmarks ou esconderijos funcionais. Aguardando aprovação visual/sonora do Rick.
 
 ## Geometria
 - Grade **11 colunas × 12 linhas**, célula de **40 studs**; `Layout` (Configuration em `Map/Maze`) guarda tudo em atributos: `Cols, Rows, Cell, X0=-200, Z0=-160, EntryCol=4, ExitCol=7, Passages12="4,6", Passages23="1,10", OpenWalls` (lista `c,r|c,r;…`), `Clearings` (`2,2;8,1;5,5;1,7;8,10`), `DeadEnds1..3`.
 - Centro da célula: `x = -200 + c*40`, `z = -160 - r*40` (norte = −Z). Setor 1 = linhas 0–3, Setor 2 = 4–7, Setor 3 = 8–11.
 - Geração: DFS aleatório **por setor** (seed 2027) + 9 laços extras; **2 passagens** entre S1→S2 (colunas 4 e 6) e S2→S3 (colunas 1 e 10); 5 clareiras circulares (raio 27) com todas as paredes abertas.
 - Entrada: corredor do camping (−24,−110) → célula (4,0) em (−40,−160). Saída: célula (7,11) → corredor até o marcador `Gameplay/Interactions/FutureGateMarker` em (80, −670).
-- Paredes: bloco de **Rock** 500×28×520 (y −2…26) escavado com Air; **núcleo garantido** de 12 studs de largura × 20 de altura em todos os corredores/células (14 nos trechos que ficaram apertados); 859 saliências (`FillBall` r 3–6,5 a 2–21 de altura), 314 calotas de musgo, 304 pedras/lama na base, topo irregular. Chão: LeafyGrass com faixa central Ground; lama nas clareiras.
-- Tamanho: 440 × 480 studs (mais entrada/saída). Tempos (andando 11 studs/s): entrada → fim do S1 ≈ 43 s; → meio do S2 ≈ 60 s; → meio do S3 ≈ 109 s; correndo ~65%.
+- Paredes: Terrain Rock reescavado sem alterar o grafo. `LinkWidths` define o ritmo de cada conexão; medição final por raycast em 7 amostras por link: **todas média 20,4/min 14,0/máx 28,7; principais média 22,9/min 19,4; secundárias média 19,1/min 14,0**. S3 foi elevado para reforçar profundidade; curvas e junções receberam folga adicional.
+- Chão: faixa gasta de Ground nos caminhos principais, bolsões de Mud e 64 manchas irregulares de musgo/grama em Terrain. Detalhes de parede são rasos e esparsos; não invadem o núcleo de perseguição.
+- Tamanho: 440 × 480 studs (mais entrada/saída). A rota principal validada passa por 27 links e chega ao marcador de saída.
 
 ## Vegetação e cenário (`Map/Maze/*`)
-- `Forest`: ~540 pinheiros nos topos das paredes, ~120 mudas (0,45–0,8) nas bordas dos corredores, 20 nas clareiras, ~1.740 no cinturão de contenção (x além de ±238 e z < −655, espaçamento 10, escala 1,1–1,6) — **sem paredes invisíveis no labirinto**; a contenção é rocha + mata fechada.
-- `Undergrowth`: ~370 samambaias (asset `7979002756`, escala 0,14–0,24) nas bordas e clareiras.
-- `Props`: ~48 troncos caídos (orientados ao longo do corredor, nunca atravessados) e ~39 pedras.
-- `Mist`: 71 emissores (uma célula sim, outra não + clareiras).
-- Tudo o que caía dentro do núcleo de 12 studs foi removido (2 passes, 552 objetos).
+- `Forest`: **928 pinheiros** — 374 nas cristas (`WallTop`), 51 em grupos internos autorais (`InteriorCluster`: S1 10, S2 22, S3 19) e 503 no cinturão (`BoundaryBelt`). **Sem paredes invisíveis internas**; contenção por rocha + mata.
+- `Undergrowth`: **120 samambaias** (S1 33, S2 50, S3 37), sem colisão/touch/query.
+- `Props`: **9** elementos de composição (7 troncos e 2 pedras), todos sem colisão e fora do núcleo.
+- `Mist`: **41 emissores** (S1 11, S2 16, S3 14), reduzidos dos 71 anteriores; Atmosphere faz o trabalho amplo.
+- Árvores mantêm colisão simples só no tronco. Samambaias, props e emissores têm `CanCollide = false`.
 
 ## Marcadores (`Gameplay/`)
 - `Sectors/Sector1..3`: zonas invisíveis (atributos `Sector`, `Rows`) para o director do Homem Lua e regras de chave/código.
@@ -23,13 +24,17 @@ Construído em 11/09/2026. Só o corpo: sem chave/código, sem portão, sem Home
 - `Interactions/FutureGateMarker`: onde o portão final vai ficar.
 
 ## Escuridão e entrada
-- Ao cruzar `MazeEntrance`: `MazeEntryController` (cliente) fecha a volta (parede local + cortina de névoa + blur) **e** escurece a Lighting local em 6 s: `Brightness 0.55`, `Expo −0.95`, `Ambient (6,7,11)`, `OutdoorAmbient (14,17,27)`, Atmosphere densidade 0,78 / haze 11 / offset 0,55 / cor (58,64,82). Quem fica no acampamento mantém a luz do acampamento. Respawn restaura.
-- A lanterna vira essencial: invisível na mão em 1ª pessoa; feixe em 3 cones (18°/2,2 com sombras, 36°/0,9, 74°/0,35), origem no olho, **rotação com inércia** (`RotationLag 7`) e deriva de mão (`SwayAmount 0,35°`).
+- Ao cruzar `MazeEntrance`: `MazeEntryController` (cliente) fecha a volta (parede local + cortina de névoa + blur) **e** escurece a Lighting local em 6 s: `Brightness 0,72`, `Expo −0,58`, `Ambient (10,12,19)`, `OutdoorAmbient (22,27,39)`, Atmosphere densidade 0,74 / haze 10,5 / offset 0,48 / cor (65,72,92) / decay (12,16,26). Quem fica no acampamento mantém a luz do acampamento. Respawn restaura.
+- A lanterna continua invisível na mão em 1ª pessoa; feixe em 3 cones: foco `68/18°/2,8` com sombras, médio `48/36°/1,15`, spill `30/74°/0,42`. Inércia exponencial `RotationLag 10`; sway base `0,26°`, multiplicador `0,25` parado e `1,55` correndo.
+- `MazeAmbienceController` faz crossfade de vento/copas/cama/eventos por setor e aceita `Player.ForestSilence` (0–1) para o futuro Director.
 
 ## Testes feitos
-- Todos os 151 links do layout foram caminhados/testados: geometria 100% passável (MoveTo). O `PathfindingService` falha em 4 links da coluna 10 e no corredor de saída por limite do navmesh, **não** por bloqueio — o Homem Lua deve navegar pelo **grafo do Layout**, não pelo PathfindingService.
-- 60 fps no Setor 2 com lanterna e sombras depois de o Studio estabilizar (logo após gerar terreno o Studio fica 10–20 s a 15 fps — não é o jogo).
-- Parede local funciona (entra, não volta); escurecimento aplicado; lanterna oculta (LTM 1), feixe alinhado.
+- Largura auditada nos **151 links**; nenhum ficou abaixo do piso definido (principais ≥18, secundários ≥14). Os 7 gargalos residuais detectados na primeira medição foram reabertos.
+- Walkthrough da rota principal: S1 andando a 11 (7/7 links, 26,6 s), S2 correndo a 17 (12/12, 30,4 s), S3 correndo a 17 (7/7, 17,7 s) e saída alcançada em 4,3 s; nenhum enganche.
+- Cápsula temporária de 12×4×4 studs: 887 amostras em todos os links/nós, **0 falhas de Terrain e 0 de objetos**; placeholder removido.
+- Performance: S1 60,2 fps (pior frame observado 31,8 ms), S2 60,2 (18,4 ms), S3 60,2 (18,5 ms). Workspace na auditoria: 4.505 BaseParts, 4.294 MeshParts, 52 emitters, 12 luzes.
+- Entrada validada: parede/névoa locais, Lighting aplicada e uma legenda. As 4 variantes existem e a escolha determinística foi verificada; teste real com 4 clientes ainda falta.
+- Lanterna: três cones ativos, ferramenta local oculta, atraso após giro de 90° caiu de 76,9° no primeiro frame para 28,5° em 0,1 s e 3,9° em 0,3 s. Mixer e `ForestSilence` também validados nos 3 setores.
 
 ## Próximos passos do labirinto
-Estilo aprovado? → esconderijos (ruínas/armários) por setor, MoonWatchPoints (12–16 por setor, compostos), sons pontuais reativos, randomização de chave/código, portão final, marcos visuais por setor (posto de vigia em ruínas no S2), pequenas variações de largura/altura por setor (S3 mais fechado e mais alto).
+**Portão de aprovação:** Rick avalia no Studio escuridão, lanterna, vegetação, áudio e identidade dos setores. Só depois: landmarks/estruturas, esconderijos, MoonWatchPoints compostos, sons reativos, randomização de chave/código e portão final.

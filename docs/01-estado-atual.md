@@ -4,9 +4,9 @@
 
 ## Onde estamos
 
-Fase concluída: **fundação do jogador + acampamento + corpo do labirinto (3 setores, sem gameplay)**.
-Fase em andamento: **passada de qualidade no labirinto** (larguras 18–24, vegetação autoral, escuridão legível, lanterna mais forte, camadas de áudio, 4 falas de entrada com legenda) — ver `09-backlog.md`.
-Depois: **esconderijos, watch points, chave/código randomizados, portão** (ver `sistemas/labirinto.md`).
+Fase concluída: **fundação do jogador + acampamento + corpo do labirinto + passada de qualidade**.
+Portão atual: **aguardando avaliação do Rick no Studio** (feeling de escuridão, lanterna, vegetação e áudio).
+Depois da aprovação: **estruturas/landmarks, esconderijos, watch points, chave/código randomizados e portão** (ver `sistemas/labirinto.md`).
 
 Place: publicado no grupo Necrovale como "A Terceira Luz" (`PlaceId 86901786058243`).
 Rig: R6 forçado por `StarterPlayer/StarterCharacter` (corpo neutro, sem avatar do jogador).
@@ -28,7 +28,8 @@ Rig: R6 forçado por `StarterPlayer/StarterCharacter` (corpo neutro, sem avatar 
 
 ### Som
 - Passos por material (grama/terra/madeira, 6 variações) sincronizados ao head bob; replicados em 3D para outros jogadores; sons padrão da Roblox silenciados.
-- Ambiência global: grilos + vento. Sons pontuais aleatórios de floresta (galho, folhagem, coruja) a 18–60 studs.
+- Ambiência em mixer local por área: vento base, copas e cama fria da floresta; intensidades mudam do acampamento ao S3. Gancho `ForestSilence` pronto para o futuro Director.
+- Sons pontuais aleatórios de floresta (galho, folhagem, coruja) a 18–60 studs, a cada 12–30 s, no grupo espacial.
 - Fogueira crepitando posicional. Sem reverb (área aberta).
 
 ### Ambiente — acampamento
@@ -36,14 +37,16 @@ Rig: R6 forçado por `StarterPlayer/StarterCharacter` (corpo neutro, sem avatar 
 - Fogueira (asset), 3 barracas de expedição, 3 cadeiras, mesa de piquenique com rádio antigo, mapa e **anotações de campo** (instruções in-world), lenha, caixas/tambor, tocos, 3 postes de madeira com lampiões, varal, cerca velha com corrente rompida e placa "TRILHA FECH DA".
 - Entrada do labirinto: duas massas de rocha (terreno) ~25 e ~31 studs de altura, abertura 12–18 studs, trilha que some na névoa e dobra à esquerda, névoa rasteira densa.
 - Paredes invisíveis: sul (z +58), lados (x ±62), norte (z −126). Mata densa e escura além delas; trilha de chegada some em névoa forte.
-- Ao cruzar a entrada: fala *"Eu sinto calafrios na minha espinha..."*, blur na tela, cortina de névoa e **parede local** — não dá para voltar ao acampamento.
+- Ao cruzar a entrada: uma de 4 falas curtas em inglês, determinada por `UserId % 4`, blur na tela, cortina de névoa e **parede local** — não dá para voltar ao acampamento. Vozes continuam sem asset; apenas legenda.
 
 ### Infra
-- Backups: `ServerStorage/_Backup_2026-09-11_preGraybox` (com TerrainRegion), `ServerStorage/_Archive_2026-09-11_grayboxV1_POIs`, `backups/*.rbxl`, Git.
+- Backups: `ServerStorage/_Backup_2026-09-11_preGraybox`, `_Backup_2026-09-11_preQualityPass`, `_Archive_2026-09-11_grayboxV1_POIs`, `_Archive_2026-09-11_qualityPartialClaude`, `backups/*.rbxl` e Git.
 - Organização do Workspace: ver `03-arquitetura.md`.
 
-### Labirinto (corpo)
-- 11×12 células de 40 studs (440×480), 3 setores com 2 passagens entre cada, 5 clareiras, paredes de rocha 26+ studs com saliências/musgo, pinheiros nas cristas, mudas/samambaias/troncos/pedras/névoa nos corredores, cinturão de mata fechada sem paredes invisíveis. Layout em `Map/Maze/Layout` (atributos). Marcadores de setor e 6+6 candidatos a chave/código. Escurecimento local + parede ao entrar. 60 fps. Detalhes: `sistemas/labirinto.md`.
+### Labirinto (corpo + qualidade)
+- 11×12 células de 40 studs (440×480), 3 setores, 151 conexões, 5 clareiras e 2 passagens entre setores. Largura medida: média 20,4; mínima 14,0; principais média 22,9/mínima 19,4.
+- Paredes de rocha e caminhos foram reescavados; S3 ficou mais alto. Vegetação foi recomposta em grupos: 928 árvores, 120 samambaias, 9 props sem colisão, 41 emissores de névoa e 64 manchas irregulares de musgo/grama em Terrain.
+- Layout em `Map/Maze/Layout` (atributos), marcadores de setor e 6+6 candidatos a chave/código preservados. Escurecimento local legível, lanterna revisada e mixer de áudio por setor. Walkthrough completo, cápsula temporária de 3,5–4 m e 60 fps validados. Detalhes: `sistemas/labirinto.md`.
 
 ## O que NÃO existe ainda
 

@@ -14,7 +14,12 @@ Workspace
         Entrance      (cerca velha, corrente, placa)
         Mist          (emissores de névoa rasteira)
         Boundary      (4 paredes invisíveis: z+58, x±62, z−126)
-      Maze            (vazio — Setor 1 começa em z < −126)
+      Maze
+        Layout        (Configuration: grafo, larguras, clareiras, setores e métricas da quality pass)
+        Forest        (928 pinheiros: cristas, bolsões internos e cinturão externo)
+        Undergrowth   (120 samambaias sem colisão)
+        Props         (9 troncos/pedras decorativos sem colisão)
+        Mist          (41 emissores locais sem colisão)
       FinalArea       (vazio)
     Gameplay
       SpawnPoints/CampSpawn         (SpawnLocation em (0, 3.5, 30) virado para −Z)
@@ -36,6 +41,7 @@ Convenção: norte = **−Z**. O acampamento está centrado em (0, 0); a entrada
 | `MovementConfig` | Module | walk/sprint/pulo, stamina, FOV, bob, sway, look base, fadiga (blur/vignette/tremor), áudio corporal, tecla M |
 | `InventoryConfig` | Module | 3 slots, teclas, alcance de pickup, fades da UI |
 | `SoundConfig` | Module | passos (material→grupo, volumes), sons de floresta (intervalos/distâncias/pesos), luzes (lampião/lanterna) |
+| `AmbienceConfig` | Module | grupos, volumes-alvo por área, fade e gancho `ForestSilence` do mixer local |
 | `DialogueConfig` | Module | falas do personagem: Text, VoiceId, Duration, Once |
 | `SoundLibrary/` | Folder | `Footsteps/{Grass,Dirt,Wood}` (6 cada), `Forest/{BranchSnap 7, Foliage 4, Owl 3}` |
 | `MovementSounds/` | Folder | Heartbeat, Breathing, Ringing |
@@ -64,9 +70,10 @@ Convenção: norte = **−Z**. O acampamento está centrado em (0, 0); a entrada
 | `FootstepController` (Local) | passos por material no callback do bob; mute dos sons padrão da Roblox; toca passos dos outros |
 | `LightFlicker` (Local) | tremulação de luzes com tag `FlickerLight` (atributos BaseBrightness/Flicker/FlickerSpeed) |
 | `InteractionPrompts` (Local) | visual próprio dos ProximityPrompts (Style Custom) |
-| `CarriedLightController` (Local) | feixe da lanterna preso à câmera (com lag) para quem segura; mantém ferramenta + braço visíveis em 1ª pessoa |
+| `CarriedLightController` (Local) | feixe da lanterna preso à câmera (com inércia) para quem segura; oculta a ferramenta localmente em 1ª pessoa |
 | `DialogueController` (Local) | legenda das falas + voz (se `VoiceId`) |
-| `MazeEntryController` (Local) | ao receber `MazeEntrance`: parede local, cortina de névoa, pulso de blur |
+| `MazeEntryController` (Local) | ao receber uma `MazeEntrance1..4`: parede local, cortina de névoa, pulso de blur e escurecimento local |
+| `MazeAmbienceController` (Local) | crossfade das 4 famílias de áudio por posição/setor; aplica o gancho de silêncio do futuro Director |
 
 `StarterPlayer/StarterCharacter` = rig R6 neutro. `StarterGui`: `MovementGui` (stamina, crosshair, vignette), `InventoryGui`, `DialogueGui`.
 
@@ -75,12 +82,12 @@ Convenção: norte = **−Z**. O acampamento está centrado em (0, 0); a entrada
 - `Assets/TreeTemplates` (12 pinheiros Ponderosa, pivot na base, colisão só no tronco)
 - `Assets/Props` (ExpeditionTent, CratesBarrel, Campfire, CampChair, FirewoodPile, FlashlightSource, OldRadio, PicnicTable, TreeStump)
 - `Items` (Tools: Lanterna, Lampião, Chave Inglesa, Bateria, Fusível)
-- `_Backup_2026-09-11_preGraybox`, `_Archive_2026-09-11_grayboxV1_POIs`
+- `_Backup_2026-09-11_preGraybox`, `_Backup_2026-09-11_preQualityPass`, `_Archive_2026-09-11_grayboxV1_POIs`, `_Archive_2026-09-11_qualityPartialClaude`
 
 ## Lighting / SoundService
 
 Noite (`ClockTime 22.6`, lua 16°, sol 0°), `Brightness 1.4`, `Expo −0.15`, ambientes azul-escuros, `Atmosphere` densa clara (0.68 / haze 9.5 / offset 0.4), Bloom baixo, DoF suave, SunRays 0.
-`SoundService.AmbientReverb = NoReverb`; `Ambience/` (NightCrickets 0.16, WindInTrees 0.26).
+`SoundService.AmbientReverb = NoReverb`; `Ambience/` contém `WindBase` (0,12), `CanopyRustle` (0,20) e `ForestBed` (0,11), todos em loop. `SoundGroup`s: `MazeWind`, `MazeCanopy`, `MazeBed`, `MazeSpatial`; volumes efetivos são controlados pelo cliente conforme a área.
 
 ## Tags / atributos usados
 

@@ -6,6 +6,7 @@
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local SoundService = game:GetService("SoundService")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local SoundConfig = require(Shared:WaitForChild("SoundConfig"))
@@ -17,6 +18,7 @@ local Emitters = workspace:WaitForChild("TheThirdLight"):WaitForChild("Gameplay"
 
 local Forest = SoundConfig.Forest
 local rng = Random.new()
+local SpatialGroup = SoundService:WaitForChild("MazeSpatial") :: SoundGroup
 
 -- Footstep relay -----------------------------------------------------------
 
@@ -87,6 +89,7 @@ local function emitAt(position: Vector3, groupName: string)
 
 	local sound = template:Clone()
 	sound.PlaybackSpeed = 1 + rng:NextNumber(-0.05, 0.05)
+	sound.SoundGroup = SpatialGroup
 	sound.Parent = emitter
 	sound.Ended:Once(function()
 		emitter:Destroy()

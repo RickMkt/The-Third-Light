@@ -29,6 +29,7 @@ Rejeitados após inspeção: barraca "Camping Community" (brinquedo), pack Fallo
 | Zumbido | 98392426611447 | DistrokidOfficial | "2172 Hz High Pitch Frequency", 61 s; tocado a 1,5× |
 | Grilos noturnos | 9112764023 | ProSoundEffects | "Crickets Canyon 2", loop 46 s |
 | Vento nas folhas | 9116258071 | ProSoundEffects | "Leaves Rustle Wind Blowing Through Trees 1", 76 s |
+| Vento base do labirinto | 9112777914 | ProSoundEffects | "Farmland Presence 2 (SFX)", 36 s; vento distante com insetos leves, loop a 0,9×; inserido primeiro como `ServerStorage/Probe_ForestBed`, inspecionado sem scripts/remotes e promovido para `SoundService/Ambience/WindBase` |
 | Galho quebrando ×7 | 9113581977, 9113581982, 9113581974, 9113582136, 9113582134, 9113582139, 9113582284 | ProSoundEffects | |
 | Folhagem ×4 | 9114518077, 9114518245, 9114576499, 9114576507 | ProSoundEffects | |
 | Coruja ×3 (dry) | 9117181035, 9117181543, 9117181321 | ProSoundEffects | |

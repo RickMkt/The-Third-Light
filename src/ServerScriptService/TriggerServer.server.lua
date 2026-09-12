@@ -15,18 +15,27 @@ local Triggers = workspace:WaitForChild("TheThirdLight"):WaitForChild("Gameplay"
 local fired: { [Player]: { [string]: boolean } } = {}
 local lastFire: { [Player]: { [string]: number } } = {}
 
+local function resolveLineId(player: Player, triggerLineId: string): string
+	if triggerLineId == "MazeEntrance" then
+		-- Stable per player: a party hears different reactions without relying on join order.
+		return string.format("MazeEntrance%d", (math.abs(player.UserId) % 4) + 1)
+	end
+	return triggerLineId
+end
+
 local function onTouched(zone: BasePart, hit: BasePart)
 	local lineId = zone:GetAttribute("LineId")
 	if typeof(lineId) ~= "string" then
 		return
 	end
-	local line = DialogueConfig[lineId]
-	if not line then
-		return
-	end
 	local character = hit:FindFirstAncestorOfClass("Model")
 	local player = character and Players:GetPlayerFromCharacter(character)
 	if not player then
+		return
+	end
+	local resolvedLineId = resolveLineId(player, lineId)
+	local line = DialogueConfig[resolvedLineId]
+	if not line then
 		return
 	end
 	fired[player] = fired[player] or {}
@@ -40,7 +49,7 @@ local function onTouched(zone: BasePart, hit: BasePart)
 	end
 	fired[player][lineId] = true
 	lastFire[player][lineId] = now
-	ShowLine:FireClient(player, lineId)
+	ShowLine:FireClient(player, resolvedLineId)
 end
 
 local function hook(zone: Instance)

@@ -11,10 +11,28 @@ export type Line = {
 }
 
 local DialogueConfig: { [string]: Line } = {
-	MazeEntrance = {
-		Text = "Eu sinto calafrios na minha espinha...",
+	MazeEntrance1 = {
+		Text = "I feel like something's watching me.",
 		VoiceId = "",
-		Duration = 4.5,
+		Duration = 3.4,
+		Once = true,
+	},
+	MazeEntrance2 = {
+		Text = "I've got a bad feeling about this place.",
+		VoiceId = "",
+		Duration = 3.6,
+		Once = true,
+	},
+	MazeEntrance3 = {
+		Text = "Something's moving between the trees.",
+		VoiceId = "",
+		Duration = 3.5,
+		Once = true,
+	},
+	MazeEntrance4 = {
+		Text = "I don't think we're alone in here.",
+		VoiceId = "",
+		Duration = 3.5,
 		Once = true,
 	},
 }

@@ -9,6 +9,7 @@ local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local SoundConfig = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("SoundConfig"))
+local MovementConfig = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("MovementConfig"))
 local Flashlight = SoundConfig.Lights.Flashlight
 
 local player = Players.LocalPlayer
@@ -173,8 +174,10 @@ RunService:BindToRenderStep("FlashlightBeam", Enum.RenderPriority.Camera.Value +
 	local character = player.Character
 	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
 	local moving = humanoid ~= nil and humanoid.MoveDirection.Magnitude > 0
+	local sprinting = moving and humanoid ~= nil and humanoid.WalkSpeed >= MovementConfig.SprintSpeed - 0.5
 	swayTime += dt * (if moving then 1 else 0.35)
-	local sway = math.rad(Flashlight.SwayAmount) * (if moving then 1 else 0.4)
+	local swayMultiplier = if sprinting then Flashlight.SwaySprintMultiplier elseif moving then 1 else Flashlight.SwayIdleMultiplier
+	local sway = math.rad(Flashlight.SwayAmount) * swayMultiplier
 	local drift = CFrame.Angles(math.sin(swayTime * 1.7) * sway, math.sin(swayTime * 1.3 + 0.8) * sway, 0)
 
 	local origin = (camera.CFrame * CFrame.new(Flashlight.HandOffset)).Position

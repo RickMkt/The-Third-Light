@@ -67,7 +67,7 @@ Feedback corporal (tudo sincronizado ao batimento e escalado por `1 − stamina`
 ### 3.1 Lanterna (item central da Temporada 1)
 - Aparece pequena e deitada na mesa de piquenique. As anotações de campo dizem para pegá-la.
 - Em primeira pessoa **não aparece na mão** (`LocalTransparencyModifier = 1`); outros jogadores a veem na mão do colega, acesa ou apagada (replicado por `ToggleLight`).
-- Feixe preso à **câmera**, não ao braço: rotação com inércia (`RotationLag`), leve deriva de mão (mais correndo), sem blur ao girar. Três cones: foco (18°), meio (36°), derrame (74°). Só o foco projeta sombra.
+- Feixe preso à **câmera**, não ao braço: rotação com inércia exponencial (`RotationLag 10`), deriva base `0,26°` (`0,25×` parado; `1,55×` correndo), sem blur ao girar. Três cones: foco (68 studs, 18°, 2,8), meio (48, 36°, 1,15), derrame (30, 74°, 0,42). Só o foco projeta sombra.
 - `[DECIDIDO]` Bateria: consumo lento + luz enfraquecendo (nunca apaga de vez sem aviso). Ainda não implementado.
 - Ligar/desligar tem som seco de interruptor e é ouvido pelos outros a curta distância — a luz **denuncia** o jogador tanto quanto ajuda.
 
@@ -103,15 +103,15 @@ LOBBY (spawn no acampamento, todos juntos, ~1–2 min de "normalidade")
 ### 5.1 Acampamento `[IMPLEMENTADO]`
 Clareira ~84×74 studs. Spawn ao sul, virado para a fogueira → barracas → entrada ao norte. Tudo funcional e coerente com um acampamento real: fogueira, 3 barracas de expedição, cadeiras, mesa com rádio antigo, mapa e anotações de campo (as instruções do jogo, in-world), lenha, caixas, postes de madeira com lampiões, varal, cerca velha com corrente rompida e placa "TRILHA FECH DA". Paredes invisíveis só aqui (sul e lados), mascaradas por mata densa e névoa.
 
-### 5.2 Labirinto — corpo `[IMPLEMENTADO]`, passada de qualidade `[EM ANDAMENTO]`
+### 5.2 Labirinto — corpo e passada de qualidade `[IMPLEMENTADO — AGUARDANDO APROVAÇÃO]`
 - Paredes são **formações de rocha em Terrain** (não muros): 26+ studs, assimétricas, saliências, musgo, pinheiros nas cristas. Sensação alvo: **floresta presa entre rochas**, não canyon nem corredor de jogo.
 - Grade 11×12 células de 40 studs; layout gerado (DFS por setor + laços) e guardado em atributos de `Map/Maze/Layout` para o Homem Lua navegar pelo grafo.
-- **Larguras (meta da passada de qualidade)**: principais 18–24 studs (26–28 perto de bifurcações), secundárias 15–20, apertos intencionais nunca abaixo de 13–14; núcleo caminhável sempre limpo de 10–12. Ritmo de larguras (largo → bolsão → estreito → curva → aberto → bifurcação). Pensar em uma criatura de 3,5–4 m perseguindo: nada de curvas fechadas, pedras no meio, troncos atravessados.
+- **Larguras medidas após a passada**: todas média 20,4/min 14,0; principais média 22,9/min 19,4; secundárias média 19,1/min 14,0. Bifurcações chegam a 28,7. Núcleo caminhável testado com jogador R6 e cápsula temporária equivalente a 3,5–4 m; nada decorativo atravessa rotas.
 - **Nunca ver o fim de um corredor**: curvas, névoa, vegetação.
 - **Sem paredes invisíveis dentro do labirinto.** Contenção é rocha e cinturão de mata.
 - Colisão: terreno é a colisão principal; árvores só no tronco; samambaias, grama, pedras pequenas, troncos decorativos `CanCollide = false`.
 
-### 5.3 Identidade dos setores `[DECIDIDO]`
+### 5.3 Identidade dos setores `[COMPOSIÇÃO IMPLEMENTADA; GAMEPLAY DECIDIDO]`
 | Setor | Sensação | Composição | Homem Lua |
 |---|---|---|---|
 | **1** | "Ainda parece uma trilha" | mais aberto, mais céu, corredores largos, poucas árvores dentro | **Watch** apenas: aparece em `MoonWatchPoints`, olha, some |
@@ -147,7 +147,7 @@ Resumo de `06-homem-lua.md`, do ponto de vista de gameplay:
 
 ## 7. Áudio — regras de design
 
-- **Camadas** (`[EM ANDAMENTO]` na passada de qualidade): vento base baixo · copas (folhas, responde ao vento) · "cama" da floresta (insetos frios, ruídos distantes — nada de grilos alegres) · eventos 3D espaciais aleatórios (galho, folhagem, rangido de madeira, pedra, copa distante) · ganchos de **silêncio controlado** (mixer pronto para o Director cortar camadas).
+- **Camadas implementadas**: vento base baixo · copas · cama fria da floresta · eventos 3D espaciais aleatórios (galho, folhagem, coruja) · gancho de **silêncio controlado** (`ForestSilence`) pronto para o Director cortar as quatro famílias. O mixer muda gradualmente por setor; a cama cai até 0,30 no S3.
 - Volumes nunca cobrem passos, respiração e amigos. Posicional sempre `RollOffMode = InverseTapered`; sem reverb em área aberta.
 - **Passos por material** (grama/terra/madeira, 6 variações cada) sincronizados ao head bob e replicados em 3D. Sons padrão da Roblox silenciados.
 - **Silêncio é ferramenta**: cortar a cama da floresta é o sinal mais forte de que o Homem Lua está perto. Usar pouco.
@@ -158,8 +158,8 @@ Resumo de `06-homem-lua.md`, do ponto de vista de gameplay:
 ## 8. Luz e escuridão — regras de design
 
 - Noite: `ClockTime 22.6`, lua, Atmosphere como névoa. Acampamento: quente (fogueira, lampiões) contra ambiente frio/azul.
-- Labirinto: **escurecimento local por jogador** ao entrar (tween de 6 s na Lighting do cliente). Meta: muito escuro mas **legível** — paredes minimamente lidas, silhuetas, fundo dissolvendo na névoa. Exposure alvo entre −0,45 e −0,7 (o −0,95 anterior era escuro demais).
-- A lanterna deve **claramente** revelar paredes a 30–45 studs, foco até 50–60. Se não iluminar, investigar a causa (parent, sombras, Technology, ângulo, oclusão) antes de subir brilho.
+- Labirinto: **escurecimento local por jogador** ao entrar (tween de 6 s): `Brightness 0,72`, `Exposure −0,58`, `Ambient (10,12,19)`, `OutdoorAmbient (22,27,39)`, Atmosphere `Density 0,74`, `Haze 10,5`, `Offset 0,48`, `Color (65,72,92)`, `Decay (12,16,26)`. Resultado alvo: muito escuro mas legível.
+- Lanterna: foco `68 studs / 18° / 2,8`, médio `48 / 36° / 1,15`, spill `30 / 74° / 0,42`; apenas o foco projeta sombra. Inércia exponencial `RotationLag 10`, sway base `0,26°`, multiplicadores `0,25` parado e `1,55` correndo.
 - Luzes com sombra: poucas (foco da lanterna, fogueira). `Lighting.Technology = Future` recomendado (só o Rick muda).
 - Sem luzes gratuitas no labirinto: apenas manchas frias de luar onde a copa abre, e futuros pontos de composição (ruínas, posto de vigia).
 
