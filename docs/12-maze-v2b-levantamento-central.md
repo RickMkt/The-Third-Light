@@ -1,5 +1,7 @@
 # Maze V2-B — levantamento antes da ampliação central (12/09/2026)
 
+> Registro histórico pré-escavação. Os três checkpoints abaixo foram posteriormente confirmados e a ampliação foi executada. Resultado atual: [13-maze-v2b-resultado.md](13-maze-v2b-resultado.md).
+
 Estado lido diretamente no place em **Edit**, sem mudança de Terrain nesta etapa. Base restaurável atual: `ServerStorage/_Backup_2026-09-12_preMazeV2A`, commit `172a3ea`, tag local `checkpoint-before-maze-v2b-central`. A única cópia `.rbxl` em `backups/` ainda é `TheThirdLight_2026-09-11_preGraybox.rbxl` — está antiga demais para ser checkpoint do V2-A. **Não escavar até Rick confirmar `Ctrl+S` e novo `.rbxl` atual.**
 
 ## O que Claude deixou no V2-A

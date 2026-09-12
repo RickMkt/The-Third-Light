@@ -1,11 +1,11 @@
-# 01 · Estado atual (11/09/2026)
+# 01 · Estado atual (12/09/2026)
 
 > Atualize este arquivo a cada checkpoint. Ele é o ponto de entrada de qualquer agente.
 
 ## Onde estamos
 
 Fase concluída: **fundação do jogador + acampamento + corpo do labirinto + passada de qualidade**.
-Plano oficial de execução: `11-plano-oficial-execucao.md`. **MAZE V2-A (corpo definitivo) executado em 12/09 — aguardando avaliação do Rick.** Cabana do S3 arquivada para V2-B (cabana do guarda no S2). Backups `_Backup_2026-09-11_prePhase1_entrada`, `_Backup_2026-09-12_preMazeV2A` (tag Git `checkpoint-before-maze-v2a`). Detalhes em `sistemas/labirinto.md` (seções Fase 1/2/3). Não avançar para chave/código/portão/Homem Lua sem aprovação.
+Plano oficial de execução: `11-plano-oficial-execucao.md`. **MAZE V2-B estrutural concluído no Studio em Edit em 12/09; aguardando avaliação e salvamento do Rick.** O Setor 2 ganhou uma linha central de floresta (+25% de área nominal), quatro reservas futuras afastadas e novos trajetos. Nenhuma estrutura foi construída. Backup anterior: `ServerStorage/_Backup_2026-09-12_preMazeV2B`, arquivo `backups/TheThirdLight_2026-09-12_preMazeV2B.rbxl` e tag Git `checkpoint-before-maze-v2b-central`. Relatório: `13-maze-v2b-resultado.md`; mapa atualizado: `img/mapa-labirinto-v2b.png`. **As mudanças V2-B ainda são estado vivo do place até Rick confirmar Ctrl+S; o .rbxl citado é pré-V2-B.** Não avançar para chave/código/portão/Homem Lua sem aprovação.
 Trilha 3D paralela: **Homem Lua M1 aprovado; corpo M2 concluído e aguardando aprovação**. Ainda não há rosto M3, rig, animações nem integração no place; ver `3d/moon_man/M2_REPORT.md`.
 
 Place: publicado no grupo Necrovale como "A Terceira Luz" (`PlaceId 86901786058243`).
@@ -45,11 +45,10 @@ Rig: R6 forçado por `StarterPlayer/StarterCharacter` (corpo neutro, sem avatar 
 - Organização do Workspace: ver `03-arquitetura.md`.
 
 ### Labirinto (corpo + qualidade)
-- 11×12 células de 40 studs (440×480), 3 setores, 151 conexões, 5 clareiras e 2 passagens entre setores. Após o terceiro refinamento: largura média 24,9; mínima 20,0; principais média 28,8/mínima 22,3; secundárias média 23,0/mínima 20,0.
-- Paredes de rocha e caminhos foram reescavados; S3 ficou mais alto. O calombo central foi removido dos 151 corredores e 132 nós: 604 amostras confirmaram núcleo plano, sem falhas de chão. Vegetação recomposta e aterrada: 920 árvores, 275 samambaias, 6 props sem colisão, 39 emissores de névoa e 64 manchas irregulares de musgo/grama em Terrain. Os 2 boulders esféricos artificiais foram removidos.
-- Nesta passada, uma pasta de revisão `VegetationAccent_20260911` somou 15 pinheiros jovens e 80 samambaias baixas sem colisão (totais 935/355). O apoio dos 95 modelos foi verificado por raycast; capim/arbusto de outra família ainda não foi incluído.
-- Duas clareiras existentes foram ampliadas e reservadas, sem estruturas: observatório em ruínas no S2 (64×44) e cabana abandonada no S3 (54×38), marcadas em `Gameplay/FutureStructureZones`.
-- Layout em `Map/Maze/Layout` (atributos), marcadores de setor e 6+6 candidatos a chave/código preservados. Escurecimento local legível, lanterna revisada e mixer de áudio por setor. Walkthrough completo, cápsula temporária de 3,5–4 m e 60 fps validados. Detalhes: `sistemas/labirinto.md`.
+- Layout atual: **11×13 células de 40 studs, 143 nós, 183 links**. S1 linhas 0–3 (70.400 studs²), S2 4–8 (88.000 studs²), S3 9–12 (70.400 studs²). A faixa inserida é a linha 5; S3/portão foram transladados 40 studs ao sul, sem ampliar S3. S1 foi preservado.
+- Reservas vazias no S2: Cabana (−160,−480) 40×46, Observatório (0,−400) 60×64, Posto (120,−320) 36×40, Área Técnica (200,−440) 40×45. Clareiras do Observatório, Posto e Área Técnica foram refinadas; núcleos de 28×28 livres de árvores baixas. Nenhuma construção final.
+- A faixa ganhou **50 pinheiros e 65 samambaias** nas bordas; 115/115 bases testadas sem flutuação ou enterramento e sem colisão nas peças novas. Cinco enlaces estreitos foram alargados para mínimo medido de 20,7 studs no meio da passagem. Os 26 enlaces ligados à linha nova passaram no Pathfinding com agente de raio 4, sem desvio longo.
+- Walkthrough em Play passou por Observatório, Posto, Área Técnica e Cabana (trecho longo dividido em etapas) e cruzou S2→S3. As seis linhas de visão entre os quatro centros estão bloqueadas. Entrada e morte mantiveram `InMaze`, respawn no labirinto e blur/VHS. O FPS de renderização no Studio em segundo plano ficou inconclusivo; a simulação marcou 60 FPS. Valores e ressalvas: `13-maze-v2b-resultado.md`.
 
 ## O que NÃO existe ainda
 

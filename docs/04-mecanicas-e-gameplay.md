@@ -105,9 +105,9 @@ Clareira ~84×74 studs. Spawn ao sul, virado para a fogueira → barracas → en
 
 ### 5.2 Labirinto — corpo e passada de qualidade `[IMPLEMENTADO — AGUARDANDO APROVAÇÃO]`
 - Paredes são **formações de rocha em Terrain** (não muros): 26+ studs, assimétricas, saliências, musgo, pinheiros nas cristas. Sensação alvo: **floresta presa entre rochas**, não canyon nem corredor de jogo.
-- Grade 11×12 células de 40 studs; layout gerado (DFS por setor + laços) e guardado em atributos de `Map/Maze/Layout` para o Homem Lua navegar pelo grafo.
-- **Larguras medidas após o terceiro refinamento**: todas média 24,9/min 20,0; principais média 28,8/min 22,3; secundárias média 23,0/min 20,0. Núcleo limpo de 13 studs auditado com zero objetos colidíveis e travessia R6 validada nos três setores.
-- O núcleo dos 151 corredores e 132 nós é plano a Y≈2; a faixa elevada central foi removida. Duas clareiras existentes reservam áreas livres para landmarks futuros: observatório em ruínas no S2 (64×44) e cabana abandonada no S3 (54×38). São apenas marcadores invisíveis por enquanto.
+- Grade atual 11×13 células de 40 studs (Maze V2-B); grafo de 143 nós/183 links guardado em `Map/Maze/Layout` para navegação futura do Homem Lua. S1 e S3 mantêm quatro linhas; S2 tem cinco (+25% de área nominal).
+- **Larguras históricas do V1 refinado**: média 24,9/min 20,0; principais média 28,8/min 22,3; secundárias média 23,0/min 20,0. No V2-B, os cinco enlaces mais estreitos da linha nova foram reescavados para pelo menos 20,7 studs no ponto central medido; os 26 enlaces dessa linha passaram no Pathfinding com raio 4.
+- As quatro áreas de landmark são somente reservas invisíveis no S2: Cabana 40×46, Observatório 60×64, Posto 36×40 e Área Técnica 40×45. **Nenhuma estrutura construída.** O piso da faixa nova mantém transição suave com os setores existentes; o acabamento visual definitivo depende da avaliação do Rick.
 - **Nunca ver o fim de um corredor**: curvas, névoa, vegetação.
 - **Sem paredes invisíveis dentro do labirinto.** Contenção é rocha e cinturão de mata.
 - Colisão: terreno é a colisão principal; árvores só no tronco; samambaias, grama, pedras pequenas, troncos decorativos `CanCollide = false`.

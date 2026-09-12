@@ -101,3 +101,9 @@ Configuração final noturna: `ClockTime 22.6`, lua 16°, sol 0°, `Brightness 1
 - `Map/Maze/Sector1 | Sector2 | Sector3 | FinalGateArea`, cada um com `Forest`, `Undergrowth`, `Props`, `Mist`. `Map/Maze/Layout` (Configuration) continua a verdade do grafo (`OpenWalls`, `LinkWidths`, `MainLinks`, `Clearings`, `StructureAreas`, `DeadEnds1..3`, `Pockets`, `EntryMouth`).
 - `Gameplay/ObjectiveCandidates/Sector2|Sector3` (antes `FutureObjectiveSpawns`), `Gameplay/FutureStructures/{RangerCabin,Observatory,WatchPost,TechnicalArea,AncientFoundation}`, `Gameplay/FutureMoonPoints`, `Gameplay/EasterEggAreas` — todos parts invisíveis com atributos (sem lógica).
 - `ServerStorage/_Tools/MazePhase2` (ModuleScript de construção: paredes, vegetação, copas) — ferramenta de desenvolvimento, não roda em jogo.
+
+## Atualização MAZE V2-B (12/09)
+- `Map/Maze/Layout`: `Rows=13`, `Sector2Rows=4-8`, `Sector3Rows=9-12`, 183 `OpenWalls`, reservas futuras reindexadas. A linha 5 é a nova faixa central; as linhas antigas 5–11 foram transladadas 40 studs ao sul. S1 permaneceu no lugar.
+- `Map/Maze/Sector2/Forest/V2B_NewBand` (50 árvores) e `Undergrowth/V2B_NewBand` (65 samambaias): peças decorativas ancoradas e sem colisão. `Gameplay/Sectors` e os marcadores de `FutureStructures` acompanham o novo traçado; nenhuma estrutura foi criada.
+- `ReplicatedStorage/Shared/AmbienceConfig` guarda agora limites S2/S3 em Z = −300/−500; `StarterPlayerScripts/MazeAmbienceController` lê esses valores. A fonte em `src/` foi espelhada no place.
+- Backup anterior em `ServerStorage/_Backup_2026-09-12_preMazeV2B` e `backups/TheThirdLight_2026-09-12_preMazeV2B.rbxl`; este último é **pré-V2-B**. Ver `13-maze-v2b-resultado.md`.

@@ -1,6 +1,8 @@
 # Labirinto — corpo (Setores 1–3)
 
-Construído e submetido à passada de qualidade em 11/09/2026. Só o corpo: sem chave/código, sem portão, sem Homem Lua, sem landmarks ou esconderijos funcionais. Aguardando aprovação visual/sonora do Rick.
+**Estado vivo atual: Maze V2-B, 12/09/2026.** Grade 11×13, Setor 2 com cinco linhas e 88.000 studs²; S1/S3 com quatro linhas e 70.400 studs² cada. Quatro FutureStructureAreas vazias no S2, 50 árvores e 65 samambaias novas na faixa central, 26 enlaces da faixa transitáveis com agente de raio 4. Relatório completo e ressalvas em `../13-maze-v2b-resultado.md`; mapa superior em `../img/mapa-labirinto-v2b.png`. Ainda sem chave/código, portão funcional, Homem Lua integrado, landmarks ou esconderijos.
+
+As seções abaixo registram as fases anteriores (V1 e V2-A) e contêm medições históricas; não usá-las como números atuais de linhas, árvores ou coordenadas.
 
 ## Geometria
 - Grade **11 colunas × 12 linhas**, célula de **40 studs**; `Layout` (Configuration em `Map/Maze`) guarda tudo em atributos: `Cols, Rows, Cell, X0=-200, Z0=-160, EntryCol=4, ExitCol=7, Passages12="4,6", Passages23="1,10", OpenWalls` (lista `c,r|c,r;…`), `Clearings` (`2,2;8,1;5,5;1,7;8,10`), `DeadEnds1..3`.

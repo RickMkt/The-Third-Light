@@ -22,8 +22,8 @@ local accumulator = 0
 
 local function areaForZ(z: number)
 	if z > -126 then return Config.Areas.Camp end
-	if z > -300 then return Config.Areas.Sector1 end
-	if z > -460 then return Config.Areas.Sector2 end
+	if z > Config.Sector2StartZ then return Config.Areas.Sector1 end
+	if z > Config.Sector3StartZ then return Config.Areas.Sector2 end
 	return Config.Areas.Sector3
 end
 
