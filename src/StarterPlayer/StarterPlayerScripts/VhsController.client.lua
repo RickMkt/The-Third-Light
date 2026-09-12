@@ -1,13 +1,12 @@
 --!strict
--- Soft VHS look, active from the camp: faint scanlines, slight wash-out,
--- an occasional tracking band drifting down and tiny line jitter. Never a
--- field of dots. Intensity rises a little once the player is inside the maze
+-- Soft VHS look, active from the camp: faint scanlines, slight wash-out and
+-- tiny line jitter. Never a field of dots, never a tracking band (removed on
+-- 12/09: it read as an explicit TV defect). Intensity rises a little once the player is inside the maze
 -- (server sets Player.InMaze). Values live in VisualConfig.Vhs.
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Lighting = game:GetService("Lighting")
-local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
 
 local VisualConfig = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("VisualConfig"))
@@ -54,20 +53,6 @@ local function shade(name: string, anchorY: number, posY: number, rotation: numb
 end
 shade("EdgeTop", 0, 0, 90)
 shade("EdgeBottom", 1, 1, -90)
-
-local band = Instance.new("Frame")
-band.Name = "TrackingBand"
-band.BorderSizePixel = 0
-band.BackgroundColor3 = Color3.fromRGB(210, 218, 232)
-band.BackgroundTransparency = 1
-band.Size = UDim2.new(1, 0, 0, V.TrackingBandHeight)
-band.Position = UDim2.fromScale(0, -0.1)
-band.ZIndex = 3
-local bandGrad = Instance.new("UIGradient")
-bandGrad.Rotation = 90
-bandGrad.Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.5, 0), NumberSequenceKeypoint.new(1, 1) })
-bandGrad.Parent = band
-band.Parent = gui
 
 local lineFrames: { Frame } = {}
 local function rebuildScanlines()
@@ -118,20 +103,7 @@ player:GetAttributeChangedSignal("InMaze"):Connect(function()
 	soft.Size = if inMaze() then 0 else V.SoftBlur
 end)
 
--- tracking band + jitter + brightness flicker -----------------------------------
-task.spawn(function()
-	while gui.Parent do
-		local interval = if inMaze() then V.TrackingIntervalMaze else V.TrackingInterval
-		task.wait(rng:NextNumber(interval[1], interval[2]))
-		band.Position = UDim2.new(0, 0, 0, -V.TrackingBandHeight)
-		band.BackgroundTransparency = V.TrackingBandTransparency
-		local tween = TweenService:Create(band, TweenInfo.new(V.TrackingTravel, Enum.EasingStyle.Linear), { Position = UDim2.new(0, 0, 1, 0) })
-		tween:Play()
-		tween.Completed:Wait()
-		band.BackgroundTransparency = 1
-	end
-end)
-
+-- jitter + brightness flicker ---------------------------------------------------
 task.spawn(function()
 	while gui.Parent do
 		task.wait(rng:NextNumber(V.JitterInterval[1], V.JitterInterval[2]))
