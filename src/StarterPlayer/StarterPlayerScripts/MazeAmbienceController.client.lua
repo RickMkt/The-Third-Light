@@ -1,6 +1,7 @@
 --!strict
--- Crossfades the forest layers by sector and exposes one scalar hook for the
--- future Director to create controlled silence without replacing this mixer.
+-- Crossfades the forest layers by sector, then by the ambient state the
+-- server puts this player in (AmbienceConfig.States), plus one scalar hook
+-- (ForestSilence) for controlled silence. One mixer, no extra tracks.
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -18,7 +19,13 @@ local groups = {
 }
 
 local target = Config.Areas.Camp
+local state = { Wind = 1, Canopy = 1, Bed = 1, Spatial = 1 } -- smoothed state multipliers
 local accumulator = 0
+
+local function currentState()
+	local name = player:GetAttribute(Config.StateAttribute)
+	return (typeof(name) == "string" and Config.States[name]) or Config.States.Normal
+end
 
 local function areaForZ(z: number)
 	if z > -126 then return Config.Areas.Camp end
@@ -40,8 +47,11 @@ RunService.Heartbeat:Connect(function(dt)
 
 	local silence = math.clamp(player:GetAttribute(Config.SilenceAttribute) or 0, 0, 1)
 	local alpha = 1 - math.exp(-Config.FadeSpeed * dt)
+	local stateAlpha = 1 - math.exp(-Config.StateFadeSpeed * dt)
+	local wanted = currentState()
 	for name, group in groups do
-		local desired = target[name] * (1 - silence)
+		state[name] += (wanted[name] - state[name]) * stateAlpha
+		local desired = target[name] * state[name] * (1 - silence)
 		group.Volume += (desired - group.Volume) * alpha
 	end
 end)

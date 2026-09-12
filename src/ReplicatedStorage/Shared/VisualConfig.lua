@@ -4,6 +4,10 @@
 local VisualConfig = {
 	MazeEntry = {
 		PersistentBlur = 2.0, -- extra softness inside the maze (stacks with the base look blur)
+		PulseBlur = 14, -- peak of the short pulse when the entrance closes
+		-- sequence after the boundary (wall + mist are instant; voice has its own delay in VoiceConfig)
+		LightingDelay = 0.2, -- lighting starts sinking (6 s tween)
+		BlurDelay = 0.45, -- blur pulse
 	},
 	-- Soft "VHS" treatment, active from the camp. Scanlines are drawn as thin
 	-- frames (no texture upload needed); values are transparencies (1 = invisible).

@@ -1,6 +1,6 @@
 # THE THIRD LIGHT (A Terceira Luz)
 
-Jogo de **terror psicológico multiplayer (4–5 jogadores)** para Roblox, em primeira pessoa.
+Jogo de **terror psicológico multiplayer (1–4 jogadores, máximo 4)** para Roblox, em primeira pessoa.
 Três entidades ligadas a corpos celestes — **Homem Lua**, **Homem Estrela**, **Homem Sol** — uma por temporada.
 A Temporada 1 é a floresta e o Homem Lua.
 
@@ -43,7 +43,7 @@ Ordem de leitura para um agente novo: `AGENTS.md` → `docs/01-estado-atual.md` 
 
 ## O jogo em 1 minuto
 
-- 4–5 amigos acordam em um **acampamento** à noite. Fogueira, barracas, um rádio antigo, anotações na mesa dizendo para pegar a lanterna e seguir a trilha fechada.
+- Até 4 amigos acordam em um **acampamento** à noite. Fogueira, barracas, um rádio antigo, anotações na mesa dizendo para pegar a lanterna e seguir a trilha fechada.
 - Ao cruzar a **entrada do labirinto** (formações de rocha), a névoa fecha atrás de cada jogador. Não dá para voltar.
 - O labirinto é uma **floresta presa entre rochas**, em 3 setores. No **Setor 1** o Homem Lua só observa entre as árvores. No **Setor 2** ele começa a perseguir. O **Setor 3** é o mais antigo e perigoso.
 - Em algum lugar dos setores 2 e 3 estão uma **chave** e um **código**, sorteados a cada rodada. O **portão final** precisa dos dois.
@@ -91,9 +91,9 @@ Ainda não existem: chave/código, portão, casa, Homem Lua. Detalhes em `docs/0
 | Inventário | feito | 3 slots, prompt próprio (segurar E), 1/2/3 equipa, G larga; sem itens de combate |
 | Lanterna | feito | invisível na mão em 1ª pessoa, feixe na câmera com inércia, 3 cones; bateria futura |
 | Acampamento | feito | única zona relativamente segura, sentida e nunca confirmada; instruções in-world |
-| Entrada | feito | fala + blur + névoa + parede local por jogador; escurecimento local em 6 s |
+| Entrada | feito | `InMaze` → parede + névoa → luz cai → pulso de blur → voz interior (só local, 1× por rodada); escurecimento local em 6 s |
 | Labirinto | corpo feito | rocha em Terrain, 3 setores, layout em grafo; passada de qualidade em andamento |
 | Chave + código | decidido | sorteados por rodada nos setores 2/3, nunca no mesmo ponto; portão exige os dois |
 | Homem Lua | decidido | Watch → Stalk → Approach → Chase → Search → Capture, Director único; esconderijo não é imunidade |
 | Casa / Homem Estrela | decidido | só teaser, sem IA |
-| Áudio | parcial | passos por material, ambiência, eventos 3D; camadas + silêncio controlado em andamento |
+| Áudio | parcial | passos por material, mixer por setor × estado (Normal/Uneasy/Silent/MoonNear/Chase), eventos 3D por setor; assets finais pendentes |

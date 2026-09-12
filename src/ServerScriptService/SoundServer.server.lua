@@ -10,6 +10,7 @@ local SoundService = game:GetService("SoundService")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local SoundConfig = require(Shared:WaitForChild("SoundConfig"))
+local AmbienceConfig = require(Shared:WaitForChild("AmbienceConfig"))
 local Library = Shared:WaitForChild("SoundLibrary")
 local Remotes = Shared:WaitForChild("SoundRemotes")
 local FootstepRemote = Remotes:WaitForChild("Footstep") :: RemoteEvent
@@ -54,13 +55,30 @@ local groundParams = RaycastParams.new()
 groundParams.FilterType = Enum.RaycastFilterType.Include
 groundParams.FilterDescendantsInstances = { workspace.Terrain }
 
-local function pickGroup(): string
+local function sectorFor(z: number)
+	if z > -126 then
+		return Forest.Sectors.Camp
+	elseif z > AmbienceConfig.Sector2StartZ then
+		return Forest.Sectors.Sector1
+	elseif z > AmbienceConfig.Sector3StartZ then
+		return Forest.Sectors.Sector2
+	end
+	return Forest.Sectors.Sector3
+end
+
+local function eventsMultiplier(player: Player): number
+	local name = player:GetAttribute(AmbienceConfig.StateAttribute)
+	local state = (typeof(name) == "string" and AmbienceConfig.States[name]) or AmbienceConfig.States.Normal
+	return state.Events
+end
+
+local function pickGroup(weights: { [string]: number }): string
 	local total = 0
-	for _, weight in pairs(Forest.Weights) do
+	for _, weight in pairs(weights) do
 		total += weight
 	end
 	local roll = rng:NextNumber(0, total)
-	for name, weight in pairs(Forest.Weights) do
+	for name, weight in pairs(weights) do
 		roll -= weight
 		if roll <= 0 then
 			return name
@@ -101,9 +119,15 @@ local function emitAt(position: Vector3, groupName: string)
 	sound:Play()
 end
 
+-- One scheduler for the server (so a party standing together does not get
+-- four times the events): each tick picks a player and uses the rhythm and
+-- mix of the sector that player is in. A Director state with Events = 0
+-- skips that player's turn.
 local function forestLoop()
+	local wait = rng:NextNumber(Forest.Sectors.Camp.Interval[1], Forest.Sectors.Camp.Interval[2])
 	while true do
-		task.wait(rng:NextNumber(Forest.MinInterval, Forest.MaxInterval))
+		task.wait(wait)
+		wait = 4 -- until a valid target sets the real interval
 		local players = Players:GetPlayers()
 		if #players == 0 then
 			continue
@@ -113,8 +137,15 @@ local function forestLoop()
 		if not root or not root:IsA("BasePart") then
 			continue
 		end
+		local sector = sectorFor(root.Position.Z)
+		wait = rng:NextNumber(sector.Interval[1], sector.Interval[2])
+		local multiplier = eventsMultiplier(target)
+		if multiplier <= 0 then
+			continue
+		end
+		wait /= multiplier
 
-		local groupName = pickGroup()
+		local groupName = pickGroup(sector.Weights)
 		local angle = rng:NextNumber(0, math.pi * 2)
 		local distance = rng:NextNumber(Forest.MinDistance, Forest.MaxDistance)
 		local x = root.Position.X + math.cos(angle) * distance

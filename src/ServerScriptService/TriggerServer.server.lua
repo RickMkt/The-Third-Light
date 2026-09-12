@@ -1,34 +1,50 @@
 --!strict
--- Trigger zones (Gameplay.Interactions.Triggers): invisible parts with a
--- "LineId" attribute. When a player's character enters one, the matching
--- dialogue line is sent to that player. Lines marked Once fire one time per
--- player per round.
+-- Trigger zones (Gameplay.Interactions.Triggers): invisible parts with an
+-- "EventId" attribute. The server only owns state: crossing MazeEntry flips
+-- Player.InMaze (the true boundary every local system reacts to), moves the
+-- respawn inside the maze and pre-assigns a voice line so a party of four
+-- does not share the same thought. Sound, subtitle and visuals are local.
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
-local DialogueConfig = require(Shared:WaitForChild("DialogueConfig"))
-local ShowLine = Shared:WaitForChild("DialogueRemotes"):WaitForChild("ShowLine") :: RemoteEvent
+local VoiceConfig = require(Shared:WaitForChild("VoiceConfig"))
 local Triggers = workspace:WaitForChild("TheThirdLight"):WaitForChild("Gameplay"):WaitForChild("Interactions"):WaitForChild("Triggers")
 local Spawns = workspace:WaitForChild("TheThirdLight"):WaitForChild("Gameplay"):WaitForChild("SpawnPoints")
 local campSpawn = Spawns:WaitForChild("CampSpawn") :: SpawnLocation
 local mazeRespawn = Spawns:WaitForChild("MazeRespawn") :: SpawnLocation
 
-local fired: { [Player]: { [string]: boolean } } = {}
-local lastFire: { [Player]: { [string]: number } } = {}
-
-local function resolveLineId(player: Player, triggerLineId: string): string
-	if triggerLineId == "MazeEntrance" then
-		-- Stable per player: a party hears different reactions without relying on join order.
-		return string.format("MazeEntrance%d", (math.abs(player.UserId) % 4) + 1)
+-- Voice line balancing: the least-used line of the pool among players
+-- currently in this round (ties broken at random).
+local function assignVoiceLine(player: Player, eventId: string)
+	local event = VoiceConfig.Events[eventId]
+	if not event or #event.Lines == 0 then
+		return
 	end
-	return triggerLineId
+	local attribute = "VoiceLine_" .. eventId
+	local used: { [number]: number } = {}
+	for _, other in ipairs(Players:GetPlayers()) do
+		local index = other:GetAttribute(attribute)
+		if other ~= player and typeof(index) == "number" then
+			used[index] = (used[index] or 0) + 1
+		end
+	end
+	local best, bestCount = {}, math.huge
+	for index = 1, #event.Lines do
+		local count = used[index] or 0
+		if count < bestCount then
+			best, bestCount = { index }, count
+		elseif count == bestCount then
+			table.insert(best, index)
+		end
+	end
+	player:SetAttribute(attribute, best[math.random(1, #best)])
 end
 
 local function onTouched(zone: BasePart, hit: BasePart)
-	local lineId = zone:GetAttribute("LineId")
-	if typeof(lineId) ~= "string" then
+	local eventId = zone:GetAttribute("EventId")
+	if typeof(eventId) ~= "string" then
 		return
 	end
 	local character = hit:FindFirstAncestorOfClass("Model")
@@ -36,27 +52,11 @@ local function onTouched(zone: BasePart, hit: BasePart)
 	if not player then
 		return
 	end
-	local resolvedLineId = resolveLineId(player, lineId)
-	local line = DialogueConfig[resolvedLineId]
-	if not line then
-		return
-	end
-	fired[player] = fired[player] or {}
-	lastFire[player] = lastFire[player] or {}
-	if line.Once and fired[player][lineId] then
-		return
-	end
-	local now = os.clock()
-	if now - (lastFire[player][lineId] or -math.huge) < 8 then
-		return
-	end
-	fired[player][lineId] = true
-	lastFire[player][lineId] = now
-	if lineId == "MazeEntrance" then
-		player:SetAttribute("InMaze", true)
+	if eventId == "MazeEntry" and player:GetAttribute("InMaze") ~= true then
+		assignVoiceLine(player, eventId)
 		player.RespawnLocation = mazeRespawn
+		player:SetAttribute("InMaze", true)
 	end
-	ShowLine:FireClient(player, resolvedLineId)
 end
 
 local function hook(zone: Instance)
@@ -72,12 +72,9 @@ for _, zone in ipairs(Triggers:GetChildren()) do
 end
 Triggers.ChildAdded:Connect(hook)
 
-Players.PlayerRemoving:Connect(function(player)
-	fired[player] = nil
-	lastFire[player] = nil
-end)
-
 local function onPlayerAdded(player: Player)
+	player:SetAttribute("RoundId", 1) -- the future round system increments this; clients clear their once-per-round flags
+	player:SetAttribute("AmbientState", "Normal") -- Director hook (AmbienceConfig.States)
 	player:SetAttribute("InMaze", false)
 	player.RespawnLocation = campSpawn
 end

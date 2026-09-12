@@ -5,13 +5,18 @@
 -- slow tween of the local Lighting toward "moonlight barely reaches the
 -- floor". Everything here is client-side, so each player gets their own
 -- moment and players still in the camp keep the camp's light.
+--
+-- Entry sequence (VisualConfig.MazeEntry): the server flips Player.InMaze at
+-- the true boundary -> wall + mist at once (physical) -> lighting starts to
+-- sink -> blur pulse -> the inner voice (VoiceReactionController, its own
+-- delay). The forest mix follows position (MazeAmbienceController). Nothing
+-- lands on the same frame.
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
 local Lighting = game:GetService("Lighting")
 
-local ShowLine = ReplicatedStorage:WaitForChild("Shared"):WaitForChild("DialogueRemotes"):WaitForChild("ShowLine") :: RemoteEvent
 local Triggers = workspace:WaitForChild("TheThirdLight"):WaitForChild("Gameplay"):WaitForChild("Interactions"):WaitForChild("Triggers")
 local VisualConfig = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("VisualConfig"))
 local MazeVisual = VisualConfig.MazeEntry
@@ -58,11 +63,13 @@ local function clearMazeVisuals()
 	end
 end
 
-local function closeEntrance()
+local function closeEntrance(instant: boolean)
 	if closed then
 		return
 	end
 	closed = true
+	local lightingDelay = if instant then 0 else MazeVisual.LightingDelay
+	local blurDelay = if instant then 0 else MazeVisual.BlurDelay
 	local zone = Triggers:FindFirstChild("MazeEntrance")
 	local center = if zone and zone:IsA("BasePart") then zone.Position else Vector3.new(0, 10, -62)
 
@@ -102,25 +109,39 @@ local function closeEntrance()
 
 	clearMazeVisuals()
 
-	local blur = Instance.new("BlurEffect")
-	blur.Name = "MazeAtmosphereBlur"
-	blur.Size = 0
-	blur.Parent = Lighting
-	TweenService:Create(blur, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), { Size = 14 }):Play()
-	task.delay(0.6, function()
-		if blur.Parent then
-			TweenService:Create(blur, TweenInfo.new(3.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), { Size = MazeVisual.PersistentBlur }):Play()
+	-- the moon stops reaching the floor
+	rememberCamp()
+	task.delay(lightingDelay, function()
+		if closed then
+			applyLighting(MAZE_LIGHTING, MAZE_ATMOSPHERE, 6)
 		end
 	end)
 
-	-- the moon stops reaching the floor
-	rememberCamp()
-	applyLighting(MAZE_LIGHTING, MAZE_ATMOSPHERE, 6)
+	task.delay(blurDelay, function()
+		if not closed then
+			return
+		end
+		local blur = Instance.new("BlurEffect")
+		blur.Name = "MazeAtmosphereBlur"
+		blur.Size = if instant then MazeVisual.PersistentBlur else 0
+		blur.Parent = Lighting
+		if instant then
+			return
+		end
+		TweenService:Create(blur, TweenInfo.new(0.7, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), { Size = MazeVisual.PulseBlur }):Play()
+		task.delay(0.8, function()
+			if blur.Parent then
+				TweenService:Create(blur, TweenInfo.new(3.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), { Size = MazeVisual.PersistentBlur }):Play()
+			end
+		end)
+	end)
 end
 
-ShowLine.OnClientEvent:Connect(function(lineId: string)
-	if string.match(lineId, "^MazeEntrance%d$") then
-		closeEntrance()
+-- The true boundary: the server flips InMaze when the character crosses the
+-- entrance trigger.
+player:GetAttributeChangedSignal("InMaze"):Connect(function()
+	if player:GetAttribute("InMaze") == true then
+		closeEntrance(false)
 	end
 end)
 
@@ -129,7 +150,7 @@ end)
 player.CharacterAdded:Connect(function()
 	if player:GetAttribute("InMaze") == true then
 		if not closed then
-			closeEntrance()
+			closeEntrance(true)
 		end
 		return
 	end

@@ -41,15 +41,15 @@ Convenção: norte = **−Z**. O acampamento está centrado em (0, 0); a entrada
 | `MovementConfig` | Module | walk/sprint/pulo, stamina, FOV, bob, sway, look base, fadiga (blur/vignette/tremor), áudio corporal, tecla M |
 | `InventoryConfig` | Module | 3 slots, teclas, alcance de pickup, fades da UI |
 | `SoundConfig` | Module | passos (material→grupo, volumes), sons de floresta (intervalos/distâncias/pesos), luzes (lampião/lanterna) |
-| `AmbienceConfig` | Module | grupos, volumes-alvo por área, fade e gancho `ForestSilence` do mixer local |
-| `DialogueConfig` | Module | falas do personagem: Text, VoiceId, Duration, Once |
-| `VisualConfig` | Module | blur persistente e grão procedural local após a entrada do labirinto |
+| `AmbienceConfig` | Module | grupos, volumes-alvo por área, **estados** (`Normal/Uneasy/Silent/MoonNear/Chase`, atributo `AmbientState`), fades e gancho `ForestSilence` |
+| `VoiceConfig` | Module | voz interior: `Events[id] = {Once, Cooldown, Delay, Lines{Text, SoundId, Volume, PlaybackSpeed, SubtitleDuration}}`, estilo da legenda, cadeia 2D (EQ/reverb desligados), `DebugLog` |
+| `VisualConfig` | Module | `MazeEntry` (blur persistente/pulso, delays da sequência de entrada) e `Vhs` (scanlines, bordas, jitter, cor, flicker, blur suave) |
 | `SoundLibrary/` | Folder | `Footsteps/{Grass,Dirt,Wood}` (6 cada), `Forest/{BranchSnap 7, Foliage 4, Owl 3}` |
 | `MovementSounds/` | Folder | Heartbeat, Breathing, Ringing |
 | `SprintState` | RemoteEvent | cliente → servidor (bool) |
 | `InventoryRemotes/DropItem, InventoryMessage` | RemoteEvents | largar item; mensagem "cheio" |
 | `SoundRemotes/Footstep, ToggleLight` | RemoteEvents | passos replicados; ligar/desligar luz portátil |
-| `DialogueRemotes/ShowLine` | RemoteEvent | servidor → cliente (lineId) |
+| `VoiceRemotes/Trigger` | RemoteEvent | servidor → cliente (`eventId`) para momentos de voz futuros; `MazeEntry` dispara pelo atributo `InMaze` |
 
 ## ServerScriptService
 
@@ -58,7 +58,7 @@ Convenção: norte = **−Z**. O acampamento está centrado em (0, 0); a entrada
 | `MovementServer` | aplica WalkSpeed/JumpPower no spawn; espelha sprint (só 2 valores); avisa se o rig não for R6 |
 | `InventoryServer` | pickups (Model com prompt custom, `PickupRotation`/`PickupScale`), limite de 3, slot estável, drop, spawn nos marcadores de `ItemSpawns` |
 | `SoundServer` | relay de passos (rate-limit), sons pontuais de floresta ao redor dos jogadores, toggle de luzes portáteis (Lit, LitPart) |
-| `TriggerServer` | zonas com `LineId` → `ShowLine` (Once por jogador; anti-repique 8 s) |
+| `TriggerServer` | zonas com `EventId`; `MazeEntry` → balanceia `VoiceLine_MazeEntry`, `RespawnLocation = MazeRespawn`, `InMaze = true`; no join define `RoundId`, `AmbientState`, `InMaze` |
 
 ## StarterPlayer/StarterPlayerScripts
 
@@ -72,11 +72,12 @@ Convenção: norte = **−Z**. O acampamento está centrado em (0, 0); a entrada
 | `LightFlicker` (Local) | tremulação de luzes com tag `FlickerLight` (atributos BaseBrightness/Flicker/FlickerSpeed) |
 | `InteractionPrompts` (Local) | visual próprio dos ProximityPrompts (Style Custom) |
 | `CarriedLightController` (Local) | feixe da lanterna preso à câmera (com inércia) para quem segura; oculta a ferramenta localmente em 1ª pessoa |
-| `DialogueController` (Local) | legenda das falas + voz (se `VoiceId`) |
-| `MazeEntryController` (Local) | ao receber uma `MazeEntrance1..4`: parede local, cortina de névoa, pulso de blur → blur 1,5, grão procedural e escurecimento local |
-| `MazeAmbienceController` (Local) | crossfade das 4 famílias de áudio por posição/setor; aplica o gancho de silêncio do futuro Director |
+| `VoiceReactionController` (Local) | voz interior 2D só local + legenda (`VoiceGui` criado em runtime); dispara por `InMaze`, `VoiceRemotes.Trigger`; `Once` por rodada (`RoundId`) |
+| `VhsController` (Local) | tratamento VHS suave desde o acampamento (sem faixa de tracking) |
+| `MazeEntryController` (Local) | quando `InMaze` vira true: parede local + névoa (0 s), Lighting (0,2 s, tween 6 s), pulso de blur (0,45 s) → 2,0; recria tudo no respawn |
+| `MazeAmbienceController` (Local) | crossfade das 4 famílias por setor × `AmbientState` × (1 − `ForestSilence`) |
 
-`StarterPlayer/StarterCharacter` = rig R6 neutro. `StarterGui`: `MovementGui` (stamina, crosshair, vignette), `InventoryGui`, `DialogueGui`.
+`StarterPlayer/StarterCharacter` = rig R6 neutro. `StarterGui`: `MovementGui` (stamina, crosshair, vignette), `InventoryGui`. (`VoiceGui` e `VhsOverlay` são criados em runtime pelos controllers.)
 
 ## ServerStorage
 

@@ -11,7 +11,8 @@
 3. **Corpo do jogador importa.** Stamina, respiração, coração, visão embaçada e velocidade são a mecânica central de sobrevivência. Não existe HP.
 4. **Objetivo simples, execução perigosa.** Achar chave + código e abrir o portão. Nenhum puzzle complexo; o perigo está em atravessar o labirinto carregando algo, no escuro, com o Homem Lua.
 5. **Multiplayer como amplificador.** Ouvir um amigo correndo no escuro, perder o grupo, decidir se espera ou segue. Sem PvP, sem papéis, sem loja.
-6. **Nada de UI de jogo.** Sem minimapa, sem marcador de objetivo, sem "safe zone", sem nomes flutuantes, sem barra de HP, sem contador de inimigos. A UI se resume a stamina discreta, crosshair dot, hotbar de 3 slots e legendas de fala.
+6. **Regra 60/40 (oficial, 12/09).** 60 % do medo vem de paranoia, antecipação, silêncio, som, observação, incerteza, ambiente, estranheza, não saber se viu algo, não saber onde o Homem Lua está. 40 % vem de perseguição, aproximação física, ser encontrado, errar caminho, stamina, esconderijo, captura. Orienta level design, som, luz, Homem Lua, eventos, pacing, voice lines, jumpscares, objetivos, UI, animações, estruturas. Se o jogador está sendo perseguido metade da partida, falhamos. O jogador precisa sentir medo mesmo quando nada está acontecendo. Jumpscare só físico dentro do mundo (virar corredor, janela, porta, lanterna revelar) — nunca PNG, grito, flash.
+7. **Nada de UI de jogo.** Sem minimapa, sem marcador de objetivo, sem "safe zone", sem nomes flutuantes, sem barra de HP, sem contador de inimigos. A UI se resume a stamina discreta, crosshair dot, hotbar de 3 slots e legendas de fala.
 
 ---
 
@@ -152,7 +153,8 @@ Resumo de `06-homem-lua.md`, do ponto de vista de gameplay:
 - Volumes nunca cobrem passos, respiração e amigos. Posicional sempre `RollOffMode = InverseTapered`; sem reverb em área aberta.
 - **Passos por material** (grama/terra/madeira, 6 variações cada) sincronizados ao head bob e replicados em 3D. Sons padrão da Roblox silenciados.
 - **Silêncio é ferramenta**: cortar a cama da floresta é o sinal mais forte de que o Homem Lua está perto. Usar pouco.
-- Falas: curtas, em inglês, voz jovem adulta baixa e nervosa; **melhor sem voz do que com voz ruim** — enquanto não houver voz de qualidade, só legenda + `VoiceId` vazio documentado.
+- **Estados de ambiência** (`AmbientState`: Normal · Uneasy · Silent · MoonNear · Chase) e ritmo de eventos por setor — fundação para o Director; ver `sistemas/audio.md`.
+- Voz interior: curta, em inglês, jovem adulta baixa e nervosa, **só o próprio jogador ouve**, uma vez por evento por rodada; **melhor sem voz do que com voz ruim** — enquanto não houver voz de qualidade, só legenda + `SoundId` vazio. Ver `sistemas/voz-reacao-e-entrada.md`.
 
 ---
 
@@ -168,9 +170,10 @@ Resumo de `06-homem-lua.md`, do ponto de vista de gameplay:
 
 ## 9. Multiplayer — regras
 
+- **MaxPlayers = 4 (decisão de design, 12/09).** 1 a 4 jogadores; nunca dimensionar para 8 ou 12. Quatro permite comunicação, separação 2+2, medo de ficar sozinho, leitura sonora, Homem Lua escolher vítima. Ambientes devem comportar 4 R6 com conforto e ainda parecer apertados. `Players.MaxPlayers` é read-only por script: **Rick define em Game Settings → Basic Info → Max Players = 4** (e publica), ou no Creator Dashboard (Places → Start place → Max Players). Spawns: `CampSpawn` 10×6 e `MazeRespawn` 8×8 já comportam 4.
 - Estado por jogador para tudo que é sensorial (escurecimento, parede local, fadiga, falas). Estado global só para o que importa (Director, chave/código, portão, rodada).
 - O que o outro jogador vê: corpo neutro R6, lanterna na mão (acesa/apagada), passos em 3D. O que **não** vê: efeitos de câmera, blur, UI alheia.
-- Remotes mínimos e validados no servidor (`Footstep`, `ToggleLight`, `DropItem`, `ShowLine`); nunca confiar em valor vindo do cliente além de "qual dos valores da config".
+- Remotes mínimos e validados no servidor (`Footstep`, `ToggleLight`, `DropItem`, `VoiceRemotes.Trigger`); nunca confiar em valor vindo do cliente além de "qual dos valores da config".
 - Sem chat de proximidade próprio por enquanto; sem nomes sobre a cabeça (`[DECIDIDO]`).
 
 ---

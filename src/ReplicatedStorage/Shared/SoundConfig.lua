@@ -22,15 +22,22 @@ local SoundConfig = {
 	},
 
 	-- Random positional sounds around players (branches, foliage, owls).
+	-- Each sector has its own rhythm and mix; the player's AmbientState
+	-- (AmbienceConfig.States[...].Events) stretches the interval (0 = none).
 	Forest = {
 		CanopyLoopVolume = 0.28,
-		MinInterval = 8,
-		MaxInterval = 16,
 		MinDistance = 18, -- from the chosen player
 		MaxDistance = 60,
-		-- relative weights
-		Weights = { BranchSnap = 4, Foliage = 6, Owl = 1 },
 		OwlHeight = 14, -- owls come from up in the trees
+		Sectors = {
+			-- camp / Sector 1: a living forest
+			Camp = { Interval = { 8, 16 }, Weights = { BranchSnap = 3, Foliage = 6, Owl = 2 } },
+			Sector1 = { Interval = { 8, 16 }, Weights = { BranchSnap = 4, Foliage = 6, Owl = 1.5 } },
+			-- Sector 2: fewer insects, more silence between events, events read as "something"
+			Sector2 = { Interval = { 12, 24 }, Weights = { BranchSnap = 5, Foliage = 4, Owl = 0.6 } },
+			-- Sector 3: emptier, rarer, harder to place
+			Sector3 = { Interval = { 18, 34 }, Weights = { BranchSnap = 5, Foliage = 2, Owl = 0.25 } },
+		},
 	},
 
 	Lights = {
