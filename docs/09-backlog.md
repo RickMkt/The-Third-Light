@@ -7,6 +7,8 @@
 - [ ] **Rick: Game Settings → Basic Info → Max Players = 4** (read-only por script) e publicar.
 - [ ] Gravar as falas (voz, ElevenLabs/real): 8 frases de `VoiceConfig.Events.MazeEntry` → `SoundId`; depois julgar a cadeia EQ/reverb (`Processing.Enabled`).
 - [ ] Teste com 4 clientes (Test → Clients and Servers → 4 players): cada um recebe frase própria; entrada individual.
+- [ ] Rick: avaliar graybox da Cabana do Guarda (escala, layout, janela da Lua) antes de qualquer art pass; medir FPS na clareira com o Studio em foco.
+- [ ] Art pass futuro da cabana: luar/rim light na boca da passagem S2→S3 para a silhueta ler pela janela à noite; 1–2 pinheiros flanqueando a boca.
 - [ ] Opcional: folha de anotações abrindo grande na tela ao apertar E.
 - [ ] Opcional: "geologia" nas rochas da entrada (estratos, fenda, raízes, pinheiros pequenos nas cristas).
 
