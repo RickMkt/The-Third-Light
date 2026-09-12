@@ -13,9 +13,12 @@ local Lighting = game:GetService("Lighting")
 
 local ShowLine = ReplicatedStorage:WaitForChild("Shared"):WaitForChild("DialogueRemotes"):WaitForChild("ShowLine") :: RemoteEvent
 local Triggers = workspace:WaitForChild("TheThirdLight"):WaitForChild("Gameplay"):WaitForChild("Interactions"):WaitForChild("Triggers")
+local VisualConfig = require(ReplicatedStorage:WaitForChild("Shared"):WaitForChild("VisualConfig"))
+local MazeVisual = VisualConfig.MazeEntry
 
 local player = Players.LocalPlayer
 local closed = false
+local visualGeneration = 0
 
 -- Maze darkness (local Lighting overrides). Camp values are restored on respawn.
 local MAZE_LIGHTING = {
@@ -47,6 +50,77 @@ local function applyLighting(values: { [string]: any }, atmosphereValues: { [str
 	if atmosphere then
 		TweenService:Create(atmosphere, info, atmosphereValues):Play()
 	end
+end
+
+local function clearMazeVisuals()
+	visualGeneration += 1
+	local blur = Lighting:FindFirstChild("MazeAtmosphereBlur")
+	if blur then
+		blur:Destroy()
+	end
+	local playerGui = player:FindFirstChildOfClass("PlayerGui")
+	local noise = playerGui and playerGui:FindFirstChild("MazeVisualNoise")
+	if noise then
+		noise:Destroy()
+	end
+end
+
+local function createMazeNoise()
+	visualGeneration += 1
+	local generation = visualGeneration
+	local playerGui = player:WaitForChild("PlayerGui") :: PlayerGui
+	local old = playerGui:FindFirstChild("MazeVisualNoise")
+	if old then
+		old:Destroy()
+	end
+
+	local gui = Instance.new("ScreenGui")
+	gui.Name = "MazeVisualNoise"
+	gui.IgnoreGuiInset = true
+	gui.ResetOnSpawn = false
+	gui.DisplayOrder = 40
+	gui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+	gui.Parent = playerGui
+
+	local random = Random.new(player.UserId + 731)
+	local specks: { Frame } = {}
+	for _ = 1, MazeVisual.NoiseSpeckCount do
+		local speck = Instance.new("Frame")
+		speck.Name = "Grain"
+		speck.BorderSizePixel = 0
+		speck.ZIndex = 1
+		speck.Parent = gui
+		table.insert(specks, speck)
+	end
+	local scanlines: { Frame } = {}
+	for _ = 1, MazeVisual.ScanlineCount do
+		local line = Instance.new("Frame")
+		line.Name = "Scanline"
+		line.BorderSizePixel = 0
+		line.BackgroundColor3 = Color3.fromRGB(125, 136, 155)
+		line.BackgroundTransparency = MazeVisual.ScanlineTransparency
+		line.Size = UDim2.new(1, 0, 0, 1)
+		line.ZIndex = 1
+		line.Parent = gui
+		table.insert(scanlines, line)
+	end
+
+	task.spawn(function()
+		while closed and visualGeneration == generation and gui.Parent do
+			for _, speck in ipairs(specks) do
+				local shade = random:NextInteger(105, 185)
+				speck.BackgroundColor3 = Color3.fromRGB(shade - 8, shade, math.min(255, shade + 10))
+				speck.BackgroundTransparency = random:NextNumber(MazeVisual.NoiseTransparencyMin, MazeVisual.NoiseTransparencyMax)
+				local size = random:NextInteger(1, 3)
+				speck.Size = UDim2.fromOffset(size, size)
+				speck.Position = UDim2.fromScale(random:NextNumber(), random:NextNumber())
+			end
+			for _, line in ipairs(scanlines) do
+				line.Position = UDim2.fromScale(0, random:NextNumber())
+			end
+			task.wait(MazeVisual.NoiseRefreshInterval)
+		end
+	end)
 end
 
 local function closeEntrance()
@@ -91,17 +165,18 @@ local function closeEntrance()
 	emitter.Drag = 0.4
 	emitter.Parent = curtain
 
+	clearMazeVisuals()
+	createMazeNoise()
+
 	local blur = Instance.new("BlurEffect")
-	blur.Name = "MazeEntryBlur"
+	blur.Name = "MazeAtmosphereBlur"
 	blur.Size = 0
 	blur.Parent = Lighting
 	TweenService:Create(blur, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), { Size = 14 }):Play()
 	task.delay(0.6, function()
-		local out = TweenService:Create(blur, TweenInfo.new(3.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), { Size = 0 })
-		out.Completed:Once(function()
-			blur:Destroy()
-		end)
-		out:Play()
+		if blur.Parent then
+			TweenService:Create(blur, TweenInfo.new(3.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), { Size = MazeVisual.PersistentBlur }):Play()
+		end
 	end)
 
 	-- the moon stops reaching the floor
@@ -121,6 +196,7 @@ player.CharacterAdded:Connect(function()
 		return
 	end
 	closed = false
+	clearMazeVisuals()
 	local camera = workspace.CurrentCamera
 	if camera then
 		for _, name in ipairs({ "MazeEntryWall", "MazeEntryMist" }) do

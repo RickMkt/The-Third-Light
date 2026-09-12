@@ -16,10 +16,10 @@ Workspace
         Boundary      (4 paredes invisíveis: z+58, x±62, z−126)
       Maze
         Layout        (Configuration: grafo, larguras, clareiras, setores e métricas da quality pass)
-        Forest        (928 pinheiros: cristas, bolsões internos e cinturão externo)
-        Undergrowth   (120 samambaias sem colisão)
-        Props         (9 troncos/pedras decorativos sem colisão)
-        Mist          (41 emissores locais sem colisão)
+        Forest        (920 pinheiros: cristas, laterais de corredor e cinturão externo)
+        Undergrowth   (275 samambaias aterradas sem colisão)
+        Props         (6 troncos decorativos sem colisão)
+        Mist          (39 emissores locais sem colisão)
       FinalArea       (vazio)
     Gameplay
       SpawnPoints/CampSpawn         (SpawnLocation em (0, 3.5, 30) virado para −Z)
@@ -43,6 +43,7 @@ Convenção: norte = **−Z**. O acampamento está centrado em (0, 0); a entrada
 | `SoundConfig` | Module | passos (material→grupo, volumes), sons de floresta (intervalos/distâncias/pesos), luzes (lampião/lanterna) |
 | `AmbienceConfig` | Module | grupos, volumes-alvo por área, fade e gancho `ForestSilence` do mixer local |
 | `DialogueConfig` | Module | falas do personagem: Text, VoiceId, Duration, Once |
+| `VisualConfig` | Module | blur persistente e grão procedural local após a entrada do labirinto |
 | `SoundLibrary/` | Folder | `Footsteps/{Grass,Dirt,Wood}` (6 cada), `Forest/{BranchSnap 7, Foliage 4, Owl 3}` |
 | `MovementSounds/` | Folder | Heartbeat, Breathing, Ringing |
 | `SprintState` | RemoteEvent | cliente → servidor (bool) |
@@ -72,7 +73,7 @@ Convenção: norte = **−Z**. O acampamento está centrado em (0, 0); a entrada
 | `InteractionPrompts` (Local) | visual próprio dos ProximityPrompts (Style Custom) |
 | `CarriedLightController` (Local) | feixe da lanterna preso à câmera (com inércia) para quem segura; oculta a ferramenta localmente em 1ª pessoa |
 | `DialogueController` (Local) | legenda das falas + voz (se `VoiceId`) |
-| `MazeEntryController` (Local) | ao receber uma `MazeEntrance1..4`: parede local, cortina de névoa, pulso de blur e escurecimento local |
+| `MazeEntryController` (Local) | ao receber uma `MazeEntrance1..4`: parede local, cortina de névoa, pulso de blur → blur 1,5, grão procedural e escurecimento local |
 | `MazeAmbienceController` (Local) | crossfade das 4 famílias de áudio por posição/setor; aplica o gancho de silêncio do futuro Director |
 
 `StarterPlayer/StarterCharacter` = rig R6 neutro. `StarterGui`: `MovementGui` (stamina, crosshair, vignette), `InventoryGui`, `DialogueGui`.
@@ -86,7 +87,7 @@ Convenção: norte = **−Z**. O acampamento está centrado em (0, 0); a entrada
 
 ## Lighting / SoundService
 
-Noite (`ClockTime 22.6`, lua 16°, sol 0°), `Brightness 1.4`, `Expo −0.15`, ambientes azul-escuros, `Atmosphere` densa clara (0.68 / haze 9.5 / offset 0.4), Bloom baixo, DoF suave, SunRays 0.
+Configuração final noturna: `ClockTime 22.6`, lua 16°, sol 0°, `Brightness 1.4`, `Expo −0.15`, ambientes azul-escuros, `Atmosphere` densa clara (0.68 / haze 9.5 / offset 0.4), Bloom baixo, DoF suave, SunRays 0. Durante o projeto da cabana, o Edit está temporariamente em luz diurna; restauração guardada em `ServerStorage/_DevReview_CabinDesign_Lighting`.
 `SoundService.AmbientReverb = NoReverb`; `Ambience/` contém `WindBase` (0,12), `CanopyRustle` (0,20) e `ForestBed` (0,11), todos em loop. `SoundGroup`s: `MazeWind`, `MazeCanopy`, `MazeBed`, `MazeSpatial`; volumes efetivos são controlados pelo cliente conforme a área.
 
 ## Tags / atributos usados

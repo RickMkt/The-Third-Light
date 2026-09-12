@@ -5,8 +5,8 @@
 ## Onde estamos
 
 Fase concluída: **fundação do jogador + acampamento + corpo do labirinto + passada de qualidade**.
-Portão atual: **aguardando avaliação do Rick no Studio** (feeling de escuridão, lanterna, vegetação e áudio).
-Depois da aprovação: **estruturas/landmarks, esconderijos, watch points, chave/código randomizados e portão** (ver `sistemas/labirinto.md`).
+Portão atual: **proposta da cabana abandonada aguardando aprovação do Rick** (`estruturas/cabana-abandonada.md`).
+Depois da aprovação: graybox da cabana; esconderijos, watch points, chave/código randomizados e portão continuam posteriores (ver `sistemas/labirinto.md`).
 Trilha 3D paralela: **Homem Lua M1 aprovado; corpo M2 concluído e aguardando aprovação**. Ainda não há rosto M3, rig, animações nem integração no place; ver `3d/moon_man/M2_REPORT.md`.
 
 Place: publicado no grupo Necrovale como "A Terceira Luz" (`PlaceId 86901786058243`).
@@ -38,10 +38,11 @@ Rig: R6 forçado por `StarterPlayer/StarterCharacter` (corpo neutro, sem avatar 
 - Fogueira (asset), 3 barracas de expedição, 3 cadeiras, mesa de piquenique com rádio antigo, mapa e **anotações de campo** (instruções in-world), lenha, caixas/tambor, tocos, 3 postes de madeira com lampiões, varal, cerca velha com corrente rompida e placa "TRILHA FECH DA".
 - Entrada do labirinto: duas massas de rocha (terreno) ~25 e ~31 studs de altura, abertura 12–18 studs, trilha que some na névoa e dobra à esquerda, névoa rasteira densa.
 - Paredes invisíveis: sul (z +58), lados (x ±62), norte (z −126). Mata densa e escura além delas; trilha de chegada some em névoa forte.
-- Ao cruzar a entrada: uma de 4 falas curtas em inglês, determinada por `UserId % 4`, blur na tela, cortina de névoa e **parede local** — não dá para voltar ao acampamento. Vozes continuam sem asset; apenas legenda.
+- Ao cruzar a entrada: uma de 4 falas curtas em inglês, determinada por `UserId % 4`, pulso de blur que assenta em 1,5, grão procedural sutil, cortina de névoa e **parede local** — não dá para voltar ao acampamento. Vozes continuam sem asset; apenas legenda.
 
 ### Infra
 - Backups: `ServerStorage/_Backup_2026-09-11_preGraybox`, `_Backup_2026-09-11_preQualityPass`, `_Backup_2026-09-11_preMazeRefine2`, `_Backup_2026-09-11_preMazeRefine3`, `_Archive_2026-09-11_grayboxV1_POIs`, `_Archive_2026-09-11_qualityPartialClaude`, `backups/*.rbxl` e Git.
+- **Estado temporário de construção:** Lighting do place está claro (`ClockTime 14`, `Brightness 2`, `Exposure 0,05`, Atmosphere 0,25) para projetar a cabana. Valores noturnos estão em `ServerStorage/_DevReview_CabinDesign_Lighting`; restaurar antes de publicar.
 - Organização do Workspace: ver `03-arquitetura.md`.
 
 ### Labirinto (corpo + qualidade)
