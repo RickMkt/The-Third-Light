@@ -1,6 +1,6 @@
 # 09 · Backlog priorizado
 
-> Prioridade vigente desde 11/09: `11-plano-oficial-execucao.md`. As listas históricas abaixo não autorizam antecipar objetivo, landmarks ou Homem Lua. Fase ativa: **1 — entrada/início**; Fase 2 e graybox da cabana somente após o portão de avaliação da fase anterior.
+> Prioridade vigente desde 11/09: `11-plano-oficial-execucao.md`. As listas históricas abaixo não autorizam antecipar objetivo, landmarks ou Homem Lua. Fases 1, 2 e graybox da cabana **executadas (12/09)**; portão de avaliação do Rick. Pendências desta passada: medir FPS com o Studio em foco; família de arbusto/capim ainda sem asset aprovado; raízes sem asset; telhado da cabana sem tábuas faltando (graybox).
 
 ## Agora (acampamento — pequenos ajustes possíveis antes do Setor 1)
 - [ ] Rick: `Lighting.Technology = Future`; `Ctrl+S`; *Salvar em arquivo como…* para atualizar `TheThirdLight.rbxl`.

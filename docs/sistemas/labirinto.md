@@ -47,3 +47,26 @@ Construído e submetido à passada de qualidade em 11/09/2026. Só o corpo: sem 
 **Portão de aprovação:** Rick avalia no Studio escuridão, lanterna, vegetação, áudio e identidade dos setores. Só depois: landmarks/estruturas, esconderijos, MoonWatchPoints compostos, sons reativos, randomização de chave/código e portão final.
 
 Mapa ASCII atual e diagnóstico de jogabilidade: `../10-auditoria-labirinto-2026-09-11.md`.
+
+## Fase 1 — entrada e aproximação (12/09, madrugada)
+- **Aproximação de ~60 studs** entre o portão de rocha do acampamento (z −86) e a boca real do labirinto (−32, −146): trilha de terra sinuosa (oeste, depois norte), 19–23 studs de largura, piso descendo de 3,6 para 2,0, ladeada por 7+7 massas de rocha crescendo de 5 para 21 studs e 14 morros que fecham os campos laterais; 22 pinheiros nas cristas, 5 emissores de névoa com taxa crescente (2→4,5). Fogueira audível até 110 studs (some ao longo da trilha).
+- **Gatilho `MazeEntrance` movido** de (0,10,−62) para (−32,10,−142), 26×16×6. A parede local fica em z −135 (dentro da boca de rocha, atrás da curva) e a cortina de névoa em −136 — mascarada por rocha + curva + névoa. Spawn→boca: **18 s andando** (fence→boca ≈ 9–10 s).
+- **Área de leitura** na célula (4,0): cilindro r 17; **três rotas em ≈1,5 s** a partir da boca: oeste (3,0)→(2,0) com lombada suave (+0,9 stud), norte (4,1) entre 3 pinheiros jovens, leste (5,0) com curva em S escondida atrás de um afloramento (−18,−173) + 2 pinheiros. Layout: `OpenWalls` +2 (153), `DeadEnds1` = 0,3;7,1;10,2, `LinkWidths` +2, `EntryMouth`.
+- `MazeRespawn` mantido em (−40, 2,5, −200) — célula (4,1), raio 4 livre, antes do S2. Morte após entrar: respawn dentro, Expo −0,58, blur 2,4, grão e parede local preservados (testado).
+
+## Fase 2 — passada de qualidade (mesma sessão)
+- Ferramenta `ServerStorage/_Tools/MazePhase2` (ModuleScript): `walls(sector, seed)`, `vegetation(sector, seed, skip)`, `wallTops(sector, seed, keepP)`. Usa raycast contra o Terrain para achar a face real da parede; nada invade o núcleo de 13 studs.
+- Paredes: S1 118 saliências / 36 musgo / 16 alcovas / 8 saliências-prateleira / 9 fendas altas; S2 98/60/9/5/10; S3 143 (30 % Slate)/140/12/6/10; ~350 pedras na base.
+- Vegetação: +91 pinheiros jovens nas laterais e junções (S1 29, S2 29, S3 33; escala 0,55–1,0), +246 samambaias em grupos na base das paredes (S1 82, S2 106, S3 58; S2 maiores), +184 pinheiros nas cristas (S1 40, S2 47, S3 97) para fechar o céu. Totais: `Maze/Forest` 1.201 (S1 146 topo/34 dentro · S2 166/32 · S3 286/39 · cinturão 498), sub-bosque ≈ 600. 8 emissores de névoa localizada no S2 (47 no total).
+- Larguras (raycast a y 5,5/9/13, 153 links): **média 21,7, mínima 13,0** (3,0|4,0 — lombada; voxels mostram 18), máxima 44,6; principais média 25,2. Histograma: 15–17: 15 · 18–20: 73 · 21–23: 23 · 24–26: 31 · 27+: 10. **0 objetos colidíveis** no núcleo; samambaias/props sem colisão; árvores só tronco.
+- Não incluído: arbusto/capim de outra família (o único candidato verificado, `9953859659`, é um arbusto seco de baixa qualidade — rejeitado); raízes (sem asset).
+
+## Fase 3 — graybox da cabana (mesma sessão)
+- `Map/Structures/AbandonedCabin` (Model, atributo `Graybox`): 24 parts WoodPlanks, footprint **18 × 22** (x 121–139, z −574…−552), célula (8,10), piso a y 3, paredes 9 studs, telhado duas águas (cumeeira y 17), porta ao sul (4,5 × 8, deslocada), **janela oeste 6 × 4** (peitoril y 6) olhando para a clareira/rocha com um pinheiro a ~40 studs — ponto forte para futura aparição; canto NE desabado; divisória em z −566 com passagem (sala 14 × 18, quarto 8 × 18); mesa, armário (atributo `FutureHidingSpot`) e prateleira placeholders; degrau na porta.
+- Candidatos adicionados em `Sector3KeyCodeSpawns`: `S3Spawn07_CabinTable` (mesa) e `S3Spawn08_CabinBack` (caixa atrás da cabana), atributos `Context`. Total S3 = 8.
+- Circulação testada em Play: porta → janela → passagem → quarto, R6, sem enganche.
+
+## Testes da sessão
+- Walkthrough boca→S1→S2→S3→cabana→saída pelo grafo: 33 células, **77,7 s correndo a 17**, 0 engates; corredor de saída até o marcador ok.
+- FPS: medição **inválida** nesta sessão — 15 fps uniformes até no acampamento (Studio em segundo plano/throttle). Antes da passada eram 60 em todos os setores; Rick deve confirmar com a janela em foco.
+- Console limpo. Lighting noturno restaurado ao final (Density do acampamento continua 0,22, como encontrado).

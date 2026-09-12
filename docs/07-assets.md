@@ -18,7 +18,7 @@ Todos inspecionados antes do uso (scripts/remotes removidos, parts ancoradas). O
 | Toco realista `Assets/Props/TreeStump` | 9217497551 | omarllollo | MeshPart + SurfaceAppearance; veio com ~38 studs, escalar para 2,6–3,2 |
 | Samambaia `Assets/Props/Fern` | 7979002756 | TheLegoGuy137 | 1 MeshPart + SurfaceAppearance; veio com 23 studs, usar escala 0,14–0,24; sem colisão |
 
-Rejeitados após inspeção: barraca "Camping Community" (brinquedo), pack Fallout 4 (ripado), fogueiras B/C, mochilas (baixa qualidade), cercas de jardim/PBR picket, placa "Forest Sign" (cartoon), postes de rua modernos.
+Rejeitados após inspeção: "Shrub/Bush" 9953859659 (Purified142 — 1 MeshPart 82×20×103, arbusto seco plano, pouco legível); barraca "Camping Community" (brinquedo), pack Fallout 4 (ripado), fogueiras B/C, mochilas (baixa qualidade), cercas de jardim/PBR picket, placa "Forest Sign" (cartoon), postes de rua modernos.
 
 ## Áudio
 

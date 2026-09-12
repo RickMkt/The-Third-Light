@@ -5,7 +5,7 @@
 ## Onde estamos
 
 Fase concluída: **fundação do jogador + acampamento + corpo do labirinto + passada de qualidade**.
-Plano oficial de execução: `11-plano-oficial-execucao.md`. Fase ativa: **Fase 1 — redesenho da entrada**, ainda sem alteração de Terrain nesta etapa. O checkpoint manual `Ctrl+S` + `.rbxl` atual é requisito antes da escavação. Após a Fase 1, testar, registrar e parar para avaliação do Rick; Fase 2 e graybox da cabana são posteriores.
+Plano oficial de execução: `11-plano-oficial-execucao.md`. **Fases 1, 2 e graybox da cabana (3) executadas em 12/09 (madrugada) — aguardando avaliação do Rick.** Backup `ServerStorage/_Backup_2026-09-11_prePhase1_entrada`. Detalhes em `sistemas/labirinto.md` (seções Fase 1/2/3). Não avançar para chave/código/portão/Homem Lua sem aprovação.
 Trilha 3D paralela: **Homem Lua M1 aprovado; corpo M2 concluído e aguardando aprovação**. Ainda não há rosto M3, rig, animações nem integração no place; ver `3d/moon_man/M2_REPORT.md`.
 
 Place: publicado no grupo Necrovale como "A Terceira Luz" (`PlaceId 86901786058243`).
@@ -37,7 +37,7 @@ Rig: R6 forçado por `StarterPlayer/StarterCharacter` (corpo neutro, sem avatar 
 - Fogueira (asset), 3 barracas de expedição, 3 cadeiras, mesa de piquenique com rádio antigo, mapa e **anotações de campo** (instruções in-world), lenha, caixas/tambor, tocos, 3 postes de madeira com lampiões, varal, cerca velha com corrente rompida e placa "TRILHA FECH DA".
 - Entrada do labirinto: duas massas de rocha (terreno) ~25 e ~31 studs de altura, abertura 12–18 studs, trilha que some na névoa e dobra à esquerda, névoa rasteira densa.
 - Paredes invisíveis: sul (z +58), lados (x ±62), norte (z −126). Mata densa e escura além delas; trilha de chegada some em névoa forte.
-- Ao cruzar a entrada: uma de 4 falas curtas em inglês, determinada por `UserId % 4`, pulso de blur que assenta em 2,4, grão procedural mais perceptível (256 pontos + 5 scanlines), cortina de névoa e **parede local** — não dá para voltar ao acampamento. Vozes continuam sem asset; apenas legenda. Depois da primeira entrada, morte faz respawn invisível no corredor interno em `(-40, -200)` e mantém o tratamento visual.
+- Entrada redesenhada: portão de rocha (z −86) → aproximação sinuosa de ~60 studs entre rochas crescentes → boca em (−32,−146) → área de leitura (4,0) com 3 rotas. Ao cruzar a boca (gatilho em z −142): uma de 4 falas curtas em inglês (`UserId % 4`), pulso de blur que assenta em 2,4, grão procedural, cortina de névoa e **parede local em z −135** (mascarada por rocha + curva) — não dá para voltar ao acampamento. Vozes continuam sem asset; apenas legenda. Depois da primeira entrada, morte faz respawn invisível no corredor interno em `(-40, -200)` e mantém o tratamento visual.
 
 ### Infra
 - Backups: `ServerStorage/_Backup_2026-09-11_preGraybox`, `_Backup_2026-09-11_preQualityPass`, `_Backup_2026-09-11_preMazeRefine2`, `_Backup_2026-09-11_preMazeRefine3`, `_Archive_2026-09-11_grayboxV1_POIs`, `_Archive_2026-09-11_qualityPartialClaude`, `backups/*.rbxl` e Git.
