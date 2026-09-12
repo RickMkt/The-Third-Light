@@ -5,8 +5,7 @@
 ## Onde estamos
 
 Fase concluída: **fundação do jogador + acampamento + corpo do labirinto + passada de qualidade**.
-Portão atual: **proposta da cabana abandonada aguardando aprovação do Rick** (`estruturas/cabana-abandonada.md`).
-Depois da aprovação: graybox da cabana; esconderijos, watch points, chave/código randomizados e portão continuam posteriores (ver `sistemas/labirinto.md`).
+Plano oficial de execução: `11-plano-oficial-execucao.md`. Fase ativa: **Fase 1 — redesenho da entrada**, ainda sem alteração de Terrain nesta etapa. O checkpoint manual `Ctrl+S` + `.rbxl` atual é requisito antes da escavação. Após a Fase 1, testar, registrar e parar para avaliação do Rick; Fase 2 e graybox da cabana são posteriores.
 Trilha 3D paralela: **Homem Lua M1 aprovado; corpo M2 concluído e aguardando aprovação**. Ainda não há rosto M3, rig, animações nem integração no place; ver `3d/moon_man/M2_REPORT.md`.
 
 Place: publicado no grupo Necrovale como "A Terceira Luz" (`PlaceId 86901786058243`).
@@ -30,7 +29,7 @@ Rig: R6 forçado por `StarterPlayer/StarterCharacter` (corpo neutro, sem avatar 
 ### Som
 - Passos por material (grama/terra/madeira, 6 variações) sincronizados ao head bob; replicados em 3D para outros jogadores; sons padrão da Roblox silenciados.
 - Ambiência em mixer local por área: vento base, copas e cama fria da floresta; intensidades mudam do acampamento ao S3. Gancho `ForestSilence` pronto para o futuro Director.
-- Sons pontuais aleatórios de floresta (galho, folhagem, coruja) a 18–60 studs, a cada 12–30 s, no grupo espacial.
+- Copas em loop a volume 0,28; sons pontuais aleatórios de floresta (galho, folhagem, coruja) a 18–60 studs, a cada 8–16 s, com folhagem predominante, no grupo espacial. Ainda requer validação auditiva do Rick.
 - Fogueira crepitando posicional. Sem reverb (área aberta).
 
 ### Ambiente — acampamento
@@ -38,16 +37,17 @@ Rig: R6 forçado por `StarterPlayer/StarterCharacter` (corpo neutro, sem avatar 
 - Fogueira (asset), 3 barracas de expedição, 3 cadeiras, mesa de piquenique com rádio antigo, mapa e **anotações de campo** (instruções in-world), lenha, caixas/tambor, tocos, 3 postes de madeira com lampiões, varal, cerca velha com corrente rompida e placa "TRILHA FECH DA".
 - Entrada do labirinto: duas massas de rocha (terreno) ~25 e ~31 studs de altura, abertura 12–18 studs, trilha que some na névoa e dobra à esquerda, névoa rasteira densa.
 - Paredes invisíveis: sul (z +58), lados (x ±62), norte (z −126). Mata densa e escura além delas; trilha de chegada some em névoa forte.
-- Ao cruzar a entrada: uma de 4 falas curtas em inglês, determinada por `UserId % 4`, pulso de blur que assenta em 1,5, grão procedural sutil, cortina de névoa e **parede local** — não dá para voltar ao acampamento. Vozes continuam sem asset; apenas legenda.
+- Ao cruzar a entrada: uma de 4 falas curtas em inglês, determinada por `UserId % 4`, pulso de blur que assenta em 2,4, grão procedural mais perceptível (256 pontos + 5 scanlines), cortina de névoa e **parede local** — não dá para voltar ao acampamento. Vozes continuam sem asset; apenas legenda. Depois da primeira entrada, morte faz respawn invisível no corredor interno em `(-40, -200)` e mantém o tratamento visual.
 
 ### Infra
 - Backups: `ServerStorage/_Backup_2026-09-11_preGraybox`, `_Backup_2026-09-11_preQualityPass`, `_Backup_2026-09-11_preMazeRefine2`, `_Backup_2026-09-11_preMazeRefine3`, `_Archive_2026-09-11_grayboxV1_POIs`, `_Archive_2026-09-11_qualityPartialClaude`, `backups/*.rbxl` e Git.
-- **Estado temporário de construção:** Lighting do place está claro (`ClockTime 14`, `Brightness 2`, `Exposure 0,05`, Atmosphere 0,25) para projetar a cabana. Valores noturnos estão em `ServerStorage/_DevReview_CabinDesign_Lighting`; restaurar antes de publicar.
+- Lighting em Edit foi encontrado noturno na auditoria (`ClockTime 22,6`, `Brightness 1,4`, `Exposure -0,2`, Atmosphere 0,22). A luz diurna usada só para inspecionar as paredes foi restaurada ao final. O marcador `ServerStorage/_DevReview_CabinDesign_Lighting` segue preservado.
 - Organização do Workspace: ver `03-arquitetura.md`.
 
 ### Labirinto (corpo + qualidade)
 - 11×12 células de 40 studs (440×480), 3 setores, 151 conexões, 5 clareiras e 2 passagens entre setores. Após o terceiro refinamento: largura média 24,9; mínima 20,0; principais média 28,8/mínima 22,3; secundárias média 23,0/mínima 20,0.
 - Paredes de rocha e caminhos foram reescavados; S3 ficou mais alto. O calombo central foi removido dos 151 corredores e 132 nós: 604 amostras confirmaram núcleo plano, sem falhas de chão. Vegetação recomposta e aterrada: 920 árvores, 275 samambaias, 6 props sem colisão, 39 emissores de névoa e 64 manchas irregulares de musgo/grama em Terrain. Os 2 boulders esféricos artificiais foram removidos.
+- Nesta passada, uma pasta de revisão `VegetationAccent_20260911` somou 15 pinheiros jovens e 80 samambaias baixas sem colisão (totais 935/355). O apoio dos 95 modelos foi verificado por raycast; capim/arbusto de outra família ainda não foi incluído.
 - Duas clareiras existentes foram ampliadas e reservadas, sem estruturas: observatório em ruínas no S2 (64×44) e cabana abandonada no S3 (54×38), marcadas em `Gameplay/FutureStructureZones`.
 - Layout em `Map/Maze/Layout` (atributos), marcadores de setor e 6+6 candidatos a chave/código preservados. Escurecimento local legível, lanterna revisada e mixer de áudio por setor. Walkthrough completo, cápsula temporária de 3,5–4 m e 60 fps validados. Detalhes: `sistemas/labirinto.md`.
 

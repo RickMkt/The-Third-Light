@@ -17,6 +17,7 @@ Construído e submetido à passada de qualidade em 11/09/2026. Só o corpo: sem 
 - `Props`: **6** troncos decorativos, sem colisão e fora do núcleo. Os 2 `Boulder` esféricos artificiais foram removidos.
 - `Mist`: **39 emissores**; Atmosphere faz o trabalho amplo.
 - Árvores mantêm colisão simples só no tronco. Samambaias, props e emissores têm `CanCollide = false`.
+- `VegetationAccent_20260911`: **80 samambaias baixas + 15 pinheiros jovens adicionais** (5 pinheiros por setor), em pasta separada para revisão. São clones de famílias já existentes, não assets novos. Seleção determinística por piso de Terrain quase plano em Y≈2, distância das samambaias existentes ≥5 studs e dos novos pontos ≥7; base enterrada 0,08 stud, sem colisão/touch/query. Assim o total visível é 935 pinheiros e 355 samambaias. Capim/arbusto de nova família ainda não foi escolhido.
 
 ## Marcadores (`Gameplay/`)
 - `Sectors/Sector1..3`: zonas invisíveis (atributos `Sector`, `Rows`) para o director do Homem Lua e regras de chave/código.
@@ -25,7 +26,8 @@ Construído e submetido à passada de qualidade em 11/09/2026. Só o corpo: sem 
 - `FutureStructureZones/RuinedObservatoryZone` (S2, 64×44) e `AbandonedCabinZone` (S3, 54×38): reservas invisíveis e planas. Não contêm estrutura ainda.
 
 ## Escuridão e entrada
-- Ao cruzar `MazeEntrance`: `MazeEntryController` (cliente) fecha a volta (parede local + cortina de névoa + blur) **e** escurece a Lighting local em 6 s: `Brightness 0,72`, `Expo −0,58`, `Ambient (10,12,19)`, `OutdoorAmbient (22,27,39)`, Atmosphere densidade 0,74 / haze 10,5 / offset 0,48 / cor (65,72,92) / decay (12,16,26). Quem fica no acampamento mantém a luz do acampamento. Respawn restaura.
+- Ao cruzar `MazeEntrance`: `MazeEntryController` (cliente) fecha a volta (parede local + cortina de névoa + blur) **e** escurece a Lighting local em 6 s: `Brightness 0,72`, `Expo −0,58`, `Ambient (10,12,19)`, `OutdoorAmbient (22,27,39)`, Atmosphere densidade 0,74 / haze 10,5 / offset 0,48 / cor (65,72,92) / decay (12,16,26). Quem fica no acampamento mantém a luz do acampamento. Após a primeira entrada, morte/respawn mantém o jogador e os efeitos no labirinto.
+- `Gameplay/SpawnPoints/MazeRespawn`: spawn invisível na célula `(4,1)`, em `(-40, 2,5, -200)`; `InMaze` no Player e `RespawnLocation` são definidos no servidor ao cruzar o gatilho. O respawn foi validado por morte real em Play. O tratamento visual persistente agora usa blur 2,4, 256 partículas de ruído e 5 scanlines; percepção visual precisa de validação do Rick no cliente.
 - A lanterna continua invisível na mão em 1ª pessoa; feixe em 3 cones: foco `68/18°/2,8` com sombras, médio `48/36°/1,15`, spill `30/74°/0,42`. O preenchimento próximo agora é outro `SpotLight` frontal sem sombras (`32/100°/1,8`), 4 studs à frente e 1 abaixo: ilumina o chão sem vazar para trás. Inércia exponencial `RotationLag 10`; sway base `0,26°`, multiplicador `0,25` parado e `1,55` correndo.
 - `MazeAmbienceController` faz crossfade de vento/copas/cama/eventos por setor e aceita `Player.ForestSilence` (0–1) para o futuro Director.
 
@@ -38,6 +40,10 @@ Construído e submetido à passada de qualidade em 11/09/2026. Só o corpo: sem 
 - Terceira passada: largura mínima subiu de 14,2 para 20,0; 275/275 samambaias e 48/48 árvores laterais ficaram com contato exato e leve enterramento da base; núcleo central de 13 studs com **0 objetos colidíveis** e 0 falhas de chão. Um corredor de cada setor foi atravessado em Play; lanterna ligada a **60,0 fps**, console limpo.
 - Entrada validada: parede/névoa locais, Lighting aplicada e uma legenda. As 4 variantes existem e a escolha determinística foi verificada; teste real com 4 clientes ainda falta.
 - Lanterna: três cones ativos, ferramenta local oculta, atraso após giro de 90° caiu de 76,9° no primeiro frame para 28,5° em 0,1 s e 3,9° em 0,3 s. Mixer e `ForestSilence` também validados nos 3 setores.
+- Passada 11/09 (respawn/efeito/áudio): entrada real definiu `InMaze=true` e `RespawnLocation=MazeRespawn`; após `Humanoid.Health=0`, novo personagem surgiu em `(-40, 6,5, -200)` e manteve blur 2,4, ruído/scanlines, escurecimento e parede/neblina da entrada. 60,0 fps em 120 frames, console limpo. `CanopyRustle` permanece em loop, volume 0,28; eventos florestais configurados para 8–16 s com folhagem predominante. O *feeling* do áudio e do ruído ainda não pôde ser ouvido/visto em Play via MCP.
+- Vegetação adicional: 95/95 bases aterradas com erro máximo 0,08 stud; 0 parts com colisão, toque, query ou sem âncora. Amostragem em Play no começo do labirinto estabilizou em 60,0 fps após carregamento; console limpo. A composição visual ainda precisa ser julgada no Studio pelo Rick.
 
 ## Próximos passos do labirinto
 **Portão de aprovação:** Rick avalia no Studio escuridão, lanterna, vegetação, áudio e identidade dos setores. Só depois: landmarks/estruturas, esconderijos, MoonWatchPoints compostos, sons reativos, randomização de chave/código e portão final.
+
+Mapa ASCII atual e diagnóstico de jogabilidade: `../10-auditoria-labirinto-2026-09-11.md`.

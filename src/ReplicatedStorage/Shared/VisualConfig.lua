@@ -3,13 +3,13 @@
 
 local VisualConfig = {
 	MazeEntry = {
-		PersistentBlur = 1.5,
-		NoiseSpeckCount = 36,
-		NoiseRefreshInterval = 0.13,
-		NoiseTransparencyMin = 0.955,
-		NoiseTransparencyMax = 0.988,
-		ScanlineCount = 2,
-		ScanlineTransparency = 0.982,
+		PersistentBlur = 2.4,
+		NoiseSpeckCount = 256,
+		NoiseRefreshInterval = 0.16,
+		NoiseTransparencyMin = 0.80,
+		NoiseTransparencyMax = 0.93,
+		ScanlineCount = 5,
+		ScanlineTransparency = 0.965,
 	},
 }
 

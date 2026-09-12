@@ -111,7 +111,7 @@ local function createMazeNoise()
 				local shade = random:NextInteger(105, 185)
 				speck.BackgroundColor3 = Color3.fromRGB(shade - 8, shade, math.min(255, shade + 10))
 				speck.BackgroundTransparency = random:NextNumber(MazeVisual.NoiseTransparencyMin, MazeVisual.NoiseTransparencyMax)
-				local size = random:NextInteger(1, 3)
+				local size = random:NextInteger(1, 4)
 				speck.Size = UDim2.fromOffset(size, size)
 				speck.Position = UDim2.fromScale(random:NextNumber(), random:NextNumber())
 			end
@@ -190,8 +190,15 @@ ShowLine.OnClientEvent:Connect(function(lineId: string)
 	end
 end)
 
--- Respawn puts the player back in the camp: reopen and restore the camp light.
+-- A player who crossed the entrance respawns inside the maze, so the local
+-- treatment and one-way entrance must survive their character replacement.
 player.CharacterAdded:Connect(function()
+	if player:GetAttribute("InMaze") == true then
+		if not closed then
+			closeEntrance()
+		end
+		return
+	end
 	if not closed then
 		return
 	end

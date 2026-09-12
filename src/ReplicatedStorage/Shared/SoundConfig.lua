@@ -23,12 +23,13 @@ local SoundConfig = {
 
 	-- Random positional sounds around players (branches, foliage, owls).
 	Forest = {
-		MinInterval = 12,
-		MaxInterval = 30,
+		CanopyLoopVolume = 0.28,
+		MinInterval = 8,
+		MaxInterval = 16,
 		MinDistance = 18, -- from the chosen player
 		MaxDistance = 60,
 		-- relative weights
-		Weights = { BranchSnap = 5, Foliage = 4, Owl = 1 },
+		Weights = { BranchSnap = 4, Foliage = 6, Owl = 1 },
 		OwlHeight = 14, -- owls come from up in the trees
 	},
 

@@ -11,6 +11,9 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local DialogueConfig = require(Shared:WaitForChild("DialogueConfig"))
 local ShowLine = Shared:WaitForChild("DialogueRemotes"):WaitForChild("ShowLine") :: RemoteEvent
 local Triggers = workspace:WaitForChild("TheThirdLight"):WaitForChild("Gameplay"):WaitForChild("Interactions"):WaitForChild("Triggers")
+local Spawns = workspace:WaitForChild("TheThirdLight"):WaitForChild("Gameplay"):WaitForChild("SpawnPoints")
+local campSpawn = Spawns:WaitForChild("CampSpawn") :: SpawnLocation
+local mazeRespawn = Spawns:WaitForChild("MazeRespawn") :: SpawnLocation
 
 local fired: { [Player]: { [string]: boolean } } = {}
 local lastFire: { [Player]: { [string]: number } } = {}
@@ -49,6 +52,10 @@ local function onTouched(zone: BasePart, hit: BasePart)
 	end
 	fired[player][lineId] = true
 	lastFire[player][lineId] = now
+	if lineId == "MazeEntrance" then
+		player:SetAttribute("InMaze", true)
+		player.RespawnLocation = mazeRespawn
+	end
 	ShowLine:FireClient(player, resolvedLineId)
 end
 
@@ -69,3 +76,13 @@ Players.PlayerRemoving:Connect(function(player)
 	fired[player] = nil
 	lastFire[player] = nil
 end)
+
+local function onPlayerAdded(player: Player)
+	player:SetAttribute("InMaze", false)
+	player.RespawnLocation = campSpawn
+end
+
+Players.PlayerAdded:Connect(onPlayerAdded)
+for _, player in ipairs(Players:GetPlayers()) do
+	onPlayerAdded(player)
+end

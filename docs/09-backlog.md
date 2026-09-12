@@ -1,5 +1,7 @@
 # 09 · Backlog priorizado
 
+> Prioridade vigente desde 11/09: `11-plano-oficial-execucao.md`. As listas históricas abaixo não autorizam antecipar objetivo, landmarks ou Homem Lua. Fase ativa: **1 — entrada/início**; Fase 2 e graybox da cabana somente após o portão de avaliação da fase anterior.
+
 ## Agora (acampamento — pequenos ajustes possíveis antes do Setor 1)
 - [ ] Rick: `Lighting.Technology = Future`; `Ctrl+S`; *Salvar em arquivo como…* para atualizar `TheThirdLight.rbxl`.
 - [ ] Gravar as falas (voz): entrada do labirinto (+ 2–3 futuras) → `DialogueConfig.VoiceId`.

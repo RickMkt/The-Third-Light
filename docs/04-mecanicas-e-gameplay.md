@@ -91,9 +91,9 @@ LOBBY (spawn no acampamento, todos juntos, ~1–2 min de "normalidade")
 
 - **Rodada**: 4–5 jogadores, começa quando o servidor enche ou após timer curto (`[EM ABERTO]`). Não há "voto de mapa": só existe a Temporada 1.
 - **Acampamento** é a única zona relativamente segura, e isso é **sentido** (luz quente, fogueira, rádio, amigos), nunca confirmado (sem círculo, sem UI). O Homem Lua não entra no acampamento, mas pode ser visto da borda da mata (`[DECIDIDO]`, não implementado).
-- **Não dá para voltar**: ao cruzar a entrada, parede local + cortina de névoa + pulso de blur. Depois do pulso permanece blur 1,5 e um grão procedural sutil (36 pontos + 2 linhas, atualização a cada 0,13 s). Quem ficou no acampamento continua vendo o acampamento normal. Isso é por jogador, não global; respawn remove o tratamento.
+- **Não dá para voltar**: ao cruzar a entrada, parede local + cortina de névoa + pulso de blur. Depois do pulso permanece blur 2,4 e grão procedural (256 pontos + 5 linhas, atualização a cada 0,16 s). Quem ficou no acampamento continua vendo o acampamento normal. Isso é por jogador, não global; após ter entrado, morte/respawn **mantém** o tratamento e o jogador reaparece dentro do labirinto.
 - **Progressão do Homem Lua** é dirigida por **setor** (Director): o setor mais avançado alcançado por qualquer jogador define o estado máximo permitido.
-- **Morte/captura**: sem HP. Captura curta com jumpscare físico no mundo → tela preta → retorno a um ponto (acampamento ou início do setor, `[EM ABERTO]`) e o item crítico cai onde o jogador foi pego. Perder a rodada = todos capturados ou timer (`[EM ABERTO]`).
+- **Morte/captura**: sem HP. A morte de teste atual respawna dentro do labirinto após a primeira entrada; a futura captura curta com jumpscare físico, tela preta e queda de item crítico ainda não foi implementada. Perder a rodada = todos capturados ou timer (`[EM ABERTO]`).
 - **Vitória da Parte 1**: um jogador abre o portão; a trilha final e a casa são caminho sem Homem Lua (alívio falso), fechando no teaser do Homem Estrela.
 
 ---

@@ -17,6 +17,10 @@ local ToggleLight = Remotes:WaitForChild("ToggleLight") :: RemoteEvent
 local Emitters = workspace:WaitForChild("TheThirdLight"):WaitForChild("Gameplay"):WaitForChild("SoundEmitters")
 
 local Forest = SoundConfig.Forest
+local canopyLoop = SoundService:FindFirstChild("CanopyRustle", true)
+if canopyLoop and canopyLoop:IsA("Sound") then
+	canopyLoop.Volume = Forest.CanopyLoopVolume
+end
 local rng = Random.new()
 local SpatialGroup = SoundService:WaitForChild("MazeSpatial") :: SoundGroup
 
