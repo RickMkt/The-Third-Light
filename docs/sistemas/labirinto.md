@@ -70,3 +70,10 @@ Mapa ASCII atual e diagnóstico de jogabilidade: `../10-auditoria-labirinto-2026
 - Walkthrough boca→S1→S2→S3→cabana→saída pelo grafo: 33 células, **77,7 s correndo a 17**, 0 engates; corredor de saída até o marcador ok.
 - FPS: medição **inválida** nesta sessão — 15 fps uniformes até no acampamento (Studio em segundo plano/throttle). Antes da passada eram 60 em todos os setores; Rick deve confirmar com a janela em foco.
 - Console limpo. Lighting noturno restaurado ao final (Density do acampamento continua 0,22, como encontrado).
+
+
+## Ajustes pós-avaliação (12/09, 00:30)
+- **Clareira da cabana aberta** para r 38 (antes 27) com mordidas irregulares na borda, trilha de terra do corredor sul até a varanda, lama, 6 pinheiros em grupos na borda (fora das 4 bocas), 30 samambaias, 2 tocos.
+- **Cabana ampliada**: 26 × 32 (x 119–145, z −578…−546), pé-direito 10, cumeeira y 19; varanda 26 × 6 com 2 postes, degrau e telhado; porta sul 5 × 8; **janela oeste 10 × 4,5** com montante (composição para aparição futura); janelas pequenas ao sul e ao norte; canto NE desabado; telhado leste com falha de tábuas (z −553…−548). Sala 26 × 20 (mesa com lampião, 2 banquetas, cadeira de camping, prateleira com rádio antigo, caixas e tambor) / quarto 26 × 12 (catre, armário `FutureHidingSpot`, vela). Madeira escurecida (58,50,43 / 48,41,35).
+- **Luz interna quente** ("zona segura sentida"): lampião de mesa (clone do `TentLantern` do acampamento, ×1,5), vela com `FlickerLight` (11 / 0,9), preenchimento quente sem sombra na mesa (24 / 0,8) e lampião na varanda (×0,7). Visível pelas janelas/porta a partir das bocas da clareira.
+- **VHS suave global** (`VhsController` + `VisualConfig.Vhs`) substitui o grão de pontos: scanlines de 1 px a cada 3 px (transparência 0,90 no acampamento / 0,86 no labirinto), sombra suave nas bordas superior/inferior, faixa de tracking descendo a cada 9–16 s (5–10 no labirinto), tremor de 2 px por 2 frames, `ColorCorrection` (saturação −0,12, contraste −0,05, tint frio) com flicker de brilho ±0,012, blur 0,8 no acampamento (no labirinto o blur persistente de 2,0 do `MazeEntryController` assume). Sem pontos na tela.
